@@ -25,6 +25,24 @@ class OrdersDataSource with HttpService {
     return res;
   }
 
+  Future<Map<String, dynamic>> getOrdersByPatientId(
+    String patientId, {
+    String? branchId,
+    bool allBranches = true,
+  }) async {
+    final queryParams = <String, String>{};
+    if (branchId != null) queryParams['branch_id'] = branchId;
+    queryParams['all_branches'] = allBranches.toString();
+
+    final uri = HttpTools.generateUri(
+      "$_endpoint/patient/$patientId",
+      queryParameters: queryParams,
+    );
+    final headers = HttpTools.generateAuthHeaders();
+    final res = await getQuery(uri, headers: headers);
+    return res;
+  }
+
   Future<Map<String, dynamic>?> getOrderById(String orderId) async {
     final uri = HttpTools.generateUri("$_endpoint/$orderId");
     final headers = HttpTools.generateAuthHeaders();

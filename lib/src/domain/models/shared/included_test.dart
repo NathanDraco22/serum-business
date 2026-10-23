@@ -9,6 +9,7 @@ class IncludedTest {
   final List<ReferenceValue> referenceValues;
   final List<String> qualitativeOptions;
   final String? expectedQualitativeValue;
+  final String referenceText;
 
   IncludedTest({
     required this.labTestId,
@@ -19,6 +20,7 @@ class IncludedTest {
     this.referenceValues = const [],
     this.qualitativeOptions = const [],
     this.expectedQualitativeValue,
+    this.referenceText = '',
   });
 
   factory IncludedTest.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class IncludedTest {
               .toList() ??
           const [],
       expectedQualitativeValue: json['expectedQualitativeValue'] as String?,
+      referenceText: json['referenceText'] as String? ?? '',
     );
   }
 
@@ -50,6 +53,7 @@ class IncludedTest {
       'referenceValues': referenceValues.map((e) => e.toJson()).toList(),
       'qualitativeOptions': qualitativeOptions,
       'expectedQualitativeValue': expectedQualitativeValue,
+      'referenceText': referenceText,
     };
   }
 }

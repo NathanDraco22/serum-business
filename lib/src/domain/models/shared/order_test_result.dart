@@ -14,6 +14,7 @@ class OrderTestResult extends IncludedTest {
     super.referenceValues = const [],
     super.qualitativeOptions = const [],
     super.expectedQualitativeValue,
+    super.referenceText = '',
     this.resultValue,
     this.alertFlag,
   });
@@ -34,6 +35,7 @@ class OrderTestResult extends IncludedTest {
               .toList() ??
           const [],
       expectedQualitativeValue: json['expectedQualitativeValue'] as String?,
+      referenceText: json['referenceText'] as String? ?? '',
       resultValue: json['resultValue'] as String?,
       alertFlag: json['alertFlag'] as String?,
     );

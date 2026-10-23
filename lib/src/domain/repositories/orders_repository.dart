@@ -30,6 +30,23 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
     return _orders;
   }
 
+  Future<List<OrderInDb>> getOrdersByPatientId(
+    String patientId, {
+    String? branchId,
+    bool allBranches = true,
+  }) async {
+    final results = await ordersDataSource.getOrdersByPatientId(
+      patientId,
+      branchId: branchId,
+      allBranches: allBranches,
+    );
+    final response = ListResponse<OrderInDb>.fromJson(
+      results,
+      OrderInDb.fromJson,
+    );
+    return response.data;
+  }
+
   Future<OrderInDb?> getOrderById(String orderId) async {
     final result = await ordersDataSource.getOrderById(orderId);
     if (result == null) return null;

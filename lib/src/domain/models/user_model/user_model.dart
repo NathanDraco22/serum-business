@@ -101,6 +101,13 @@ class UserInDb extends BaseUser {
   final int? updatedAt;
   final bool isDeleted;
 
+  /// Retorna `true` si el usuario corresponde al usuario root del sistema.
+  bool get isRoot =>
+      id == 'root' ||
+      isInternal ||
+      username.toLowerCase() == 'serum' ||
+      username.toLowerCase() == 'root';
+
   UserInDb({
     required this.id,
     required super.username,
