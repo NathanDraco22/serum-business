@@ -118,4 +118,21 @@ class PatientInDb extends BasePatient {
       isDeleted: json['isDeleted'] as bool? ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'dateOfBirth': dateOfBirth,
+      'gender': gender,
+      'phone': phone,
+      'address': address,
+      'email': email,
+      'cardId': cardId,
+      'originBranch': originBranch,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'isDeleted': isDeleted,
+    };
+  }
 }
