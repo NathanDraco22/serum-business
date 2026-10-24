@@ -23,4 +23,20 @@ class ImportsDataSource with HttpService {
     final res = await postQuery(uri, {}, headers: headers);
     return res;
   }
+
+  Future<Map<String, dynamic>> importBranchPrices({
+    required String sourceBranchId,
+    required String targetBranchId,
+    bool mustOverridePrice = false,
+  }) async {
+    final headers = HttpTools.generateAuthHeaders();
+    final uri = HttpTools.generateUri("$_endpoint/branch-prices");
+    final body = {
+      'sourceBranchId': sourceBranchId,
+      'targetBranchId': targetBranchId,
+      'mustOverridePrice': mustOverridePrice,
+    };
+    final res = await postQuery(uri, body, headers: headers);
+    return res;
+  }
 }
