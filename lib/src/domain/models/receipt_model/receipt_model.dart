@@ -13,6 +13,8 @@ class BaseReceipt {
   final String concept;
   final UserInfo performedBy;
   final String? patientName;
+  final String? referenceNumber;
+  final String? bank;
 
   BaseReceipt({
     required this.receiptNumber,
@@ -26,6 +28,8 @@ class BaseReceipt {
     this.concept = 'Pago / Abono de orden',
     required this.performedBy,
     this.patientName,
+    this.referenceNumber,
+    this.bank,
   });
 }
 
@@ -41,6 +45,8 @@ class CreateReceipt {
   final String concept;
   final UserInfo performedBy;
   final String? patientName;
+  final String? referenceNumber;
+  final String? bank;
 
   CreateReceipt({
     this.receiptNumber,
@@ -54,6 +60,8 @@ class CreateReceipt {
     this.concept = 'Pago / Abono de orden',
     required this.performedBy,
     this.patientName,
+    this.referenceNumber,
+    this.bank,
   });
 
   Map<String, dynamic> toJson() {
@@ -69,6 +77,8 @@ class CreateReceipt {
       'concept': concept,
       'performedBy': performedBy.toJson(),
       if (patientName != null) 'patientName': patientName,
+      if (referenceNumber != null) 'referenceNumber': referenceNumber,
+      if (bank != null) 'bank': bank,
     };
   }
 }
@@ -109,6 +119,8 @@ class ReceiptInDb extends BaseReceipt {
     super.concept = 'Pago / Abono de orden',
     required super.performedBy,
     super.patientName,
+    super.referenceNumber,
+    super.bank,
     required this.createdAt,
     this.updatedAt,
     this.isDeleted = false,
@@ -129,6 +141,22 @@ class ReceiptInDb extends BaseReceipt {
     }
   }
 
+  String get paymentDetailsLabel {
+    if (paymentMethod.toLowerCase() == 'transfer') {
+      final parts = <String>[];
+      if (bank != null && bank!.trim().isNotEmpty) {
+        parts.add(bank!.trim());
+      }
+      if (referenceNumber != null && referenceNumber!.trim().isNotEmpty) {
+        parts.add('Ref: ${referenceNumber!.trim()}');
+      }
+      if (parts.isNotEmpty) {
+        return 'Transferencia (${parts.join(" • ")})';
+      }
+    }
+    return paymentMethodLabel;
+  }
+
   String get formattedDate {
     if (createdAt <= 0) return '';
     final date = DateTime.fromMillisecondsSinceEpoch(createdAt);
@@ -138,6 +166,28 @@ class ReceiptInDb extends BaseReceipt {
     final hour = date.hour.toString().padLeft(2, '0');
     final minute = date.minute.toString().padLeft(2, '0');
     return '$day/$month/$year $hour:$minute';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'receiptNumber': receiptNumber,
+      'orderId': orderId,
+      if (orderNumber != null) 'orderNumber': orderNumber,
+      'branchId': branchId,
+      if (shiftId != null) 'shiftId': shiftId,
+      if (registerId != null) 'registerId': registerId,
+      'amount': amount,
+      'paymentMethod': paymentMethod,
+      'concept': concept,
+      'performedBy': performedBy.toJson(),
+      if (patientName != null) 'patientName': patientName,
+      if (referenceNumber != null) 'referenceNumber': referenceNumber,
+      if (bank != null) 'bank': bank,
+      'createdAt': createdAt,
+      if (updatedAt != null) 'updatedAt': updatedAt,
+      'isDeleted': isDeleted,
+    };
   }
 
   factory ReceiptInDb.fromJson(Map<String, dynamic> json) {
@@ -157,6 +207,8 @@ class ReceiptInDb extends BaseReceipt {
           ? UserInfo.fromJson(json['performedBy'] as Map<String, dynamic>)
           : UserInfo(id: '', name: 'Operador'),
       patientName: json['patientName'] as String?,
+      referenceNumber: json['referenceNumber'] as String?,
+      bank: json['bank'] as String?,
       createdAt: (json['createdAt'] as num?)?.toInt() ?? 0,
       updatedAt: (json['updatedAt'] as num?)?.toInt(),
       isDeleted: json['isDeleted'] as bool? ?? false,

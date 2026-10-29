@@ -76,6 +76,7 @@ class CashShiftInDb extends BaseCashShift {
   final int cashBalance;
   final int cardBalance;
   final int transferBalance;
+  final Map<String, int> bankTransfers;
   final int totalBalance;
   final int? declaredCash;
   final int? difference;
@@ -97,6 +98,7 @@ class CashShiftInDb extends BaseCashShift {
     this.cashBalance = 0,
     this.cardBalance = 0,
     this.transferBalance = 0,
+    this.bankTransfers = const {},
     this.totalBalance = 0,
     this.declaredCash,
     this.difference,
@@ -110,6 +112,8 @@ class CashShiftInDb extends BaseCashShift {
   double get cashBalanceDouble => cashBalance / 100.0;
   double get cardBalanceDouble => cardBalance / 100.0;
   double get transferBalanceDouble => transferBalance / 100.0;
+  Map<String, double> get bankTransfersDouble =>
+      bankTransfers.map((k, v) => MapEntry(k, v / 100.0));
   double get totalBalanceDouble => totalBalance / 100.0;
   double get totalCashExpectedDouble => (initialBalance + cashBalance) / 100.0;
   double? get declaredCashDouble =>
@@ -117,7 +121,37 @@ class CashShiftInDb extends BaseCashShift {
   double? get differenceDouble =>
       difference != null ? difference! / 100.0 : null;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'branchId': branchId,
+      'notes': notes,
+      if (userName != null) 'userName': userName,
+      if (branchName != null) 'branchName': branchName,
+      'status': status,
+      'openedAt': openedAt,
+      if (closedAt != null) 'closedAt': closedAt,
+      'initialBalance': initialBalance,
+      'cashBalance': cashBalance,
+      'cardBalance': cardBalance,
+      'transferBalance': transferBalance,
+      'bankTransfers': bankTransfers,
+      'totalBalance': totalBalance,
+      if (declaredCash != null) 'declaredCash': declaredCash,
+      if (difference != null) 'difference': difference,
+      'isDeleted': isDeleted,
+      'createdAt': createdAt,
+      if (updatedAt != null) 'updatedAt': updatedAt,
+    };
+  }
+
   factory CashShiftInDb.fromJson(Map<String, dynamic> json) {
+    final rawBankTransfers = json['bankTransfers'] as Map<String, dynamic>?;
+    final parsedBankTransfers = rawBankTransfers != null
+        ? rawBankTransfers.map((k, v) => MapEntry(k, (v as num).toInt()))
+        : const <String, int>{};
+
     return CashShiftInDb(
       id: json['id'] as String,
       userId: json['userId'] as String? ?? '',
@@ -132,6 +166,7 @@ class CashShiftInDb extends BaseCashShift {
       cashBalance: json['cashBalance'] as int? ?? 0,
       cardBalance: json['cardBalance'] as int? ?? 0,
       transferBalance: json['transferBalance'] as int? ?? 0,
+      bankTransfers: parsedBankTransfers,
       totalBalance: json['totalBalance'] as int? ?? 0,
       declaredCash: json['declaredCash'] as int?,
       difference: json['difference'] as int?,

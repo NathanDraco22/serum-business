@@ -162,6 +162,61 @@ class OrderService {
   }
 }
 
+class OrderDiscount {
+  final String? id;
+  final String description;
+  final String type; // 'percentage' | 'amount'
+  final double value;
+  final int appliedAmount; // Monto deducido en centavos
+
+  OrderDiscount({
+    this.id,
+    required this.description,
+    this.type = 'percentage',
+    this.value = 0.0,
+    this.appliedAmount = 0,
+  });
+
+  bool get isPercentage => type == 'percentage';
+  bool get isAmount => type == 'amount';
+
+  factory OrderDiscount.fromJson(Map<String, dynamic> json) {
+    return OrderDiscount(
+      id: json['id'] as String?,
+      description: json['description'] as String? ?? '',
+      type: json['type'] as String? ?? 'percentage',
+      value: (json['value'] as num?)?.toDouble() ?? 0.0,
+      appliedAmount: (json['appliedAmount'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) 'id': id,
+      'description': description,
+      'type': type,
+      'value': value,
+      'appliedAmount': appliedAmount,
+    };
+  }
+
+  OrderDiscount copyWith({
+    String? id,
+    String? description,
+    String? type,
+    double? value,
+    int? appliedAmount,
+  }) {
+    return OrderDiscount(
+      id: id ?? this.id,
+      description: description ?? this.description,
+      type: type ?? this.type,
+      value: value ?? this.value,
+      appliedAmount: appliedAmount ?? this.appliedAmount,
+    );
+  }
+}
+
 class OrderApproval {
   final bool requiresApproval;
   final bool isApproved;
@@ -209,6 +264,7 @@ class BaseOrder {
   final String? quotationId;
   final List<OrderItem> items;
   final List<OrderService> services;
+  final List<OrderDiscount> discounts;
   final int totalPrice;
   final int paidAmount;
   final String status;
@@ -221,11 +277,18 @@ class BaseOrder {
   String? get description => notes;
   String get examId => items.isNotEmpty ? items.first.labTestId : '';
   String get examName => items.isNotEmpty ? items.map((e) => e.name).join(', ') : '';
+  int get grossTotal {
+    final itemsSum = items.fold<int>(0, (sum, i) => sum + i.salePriceApplied);
+    final servicesSum = services.fold<int>(0, (sum, s) => sum + s.price);
+    return itemsSum + servicesSum;
+  }
+  int get totalDiscounts {
+    return discounts.fold<int>(0, (sum, d) => sum + d.appliedAmount);
+  }
   int get salePriceApplied {
     if (totalPrice > 0) return totalPrice;
-    final itemsSum = items.fold(0, (sum, i) => sum + i.salePriceApplied);
-    final servicesSum = services.fold(0, (sum, s) => sum + s.price);
-    return itemsSum + servicesSum;
+    final total = grossTotal - totalDiscounts;
+    return total > 0 ? total : 0;
   }
 
   BaseOrder({
@@ -237,6 +300,7 @@ class BaseOrder {
     this.quotationId,
     this.items = const [],
     this.services = const [],
+    this.discounts = const [],
     this.totalPrice = 0,
     this.paidAmount = 0,
     this.status = "pending",
@@ -257,6 +321,7 @@ class CreateOrder extends BaseOrder {
     super.quotationId,
     super.items = const [],
     super.services = const [],
+    super.discounts = const [],
     super.totalPrice = 0,
     super.paidAmount = 0,
     super.status = "pending",
@@ -276,6 +341,7 @@ class CreateOrder extends BaseOrder {
       'quotationId': quotationId,
       'items': items.map((e) => e.toJson()).toList(),
       'services': services.map((e) => e.toJson()).toList(),
+      'discounts': discounts.map((e) => e.toJson()).toList(),
       'totalPrice': totalPrice > 0 ? totalPrice : salePriceApplied,
       'paidAmount': paidAmount,
       'status': status,
@@ -295,6 +361,7 @@ class UpdateOrder {
   final String? quotationId;
   final List<OrderItem>? items;
   final List<OrderService>? services;
+  final List<OrderDiscount>? discounts;
   final int? totalPrice;
   final int? paidAmount;
   final String? status;
@@ -314,6 +381,7 @@ class UpdateOrder {
     this.quotationId,
     this.items,
     this.services,
+    this.discounts,
     this.totalPrice,
     this.paidAmount,
     this.status,
@@ -333,6 +401,7 @@ class UpdateOrder {
       if (quotationId != null) 'quotationId': quotationId,
       if (items != null) 'items': items!.map((e) => e.toJson()).toList(),
       if (services != null) 'services': services!.map((e) => e.toJson()).toList(),
+      if (discounts != null) 'discounts': discounts!.map((e) => e.toJson()).toList(),
       if (totalPrice != null) 'totalPrice': totalPrice,
       if (paidAmount != null) 'paidAmount': paidAmount,
       if (status != null) 'status': status,
@@ -375,6 +444,8 @@ class OrderPayRequest {
   final String? registerId;
   final String paymentMethod;
   final UserInfo performedBy;
+  final String? referenceNumber;
+  final String? bank;
 
   OrderPayRequest({
     required this.amount,
@@ -382,6 +453,8 @@ class OrderPayRequest {
     this.registerId,
     required this.paymentMethod,
     required this.performedBy,
+    this.referenceNumber,
+    this.bank,
   });
 
   Map<String, dynamic> toJson() {
@@ -391,6 +464,8 @@ class OrderPayRequest {
       if (registerId != null) 'registerId': registerId,
       'paymentMethod': paymentMethod,
       'performedBy': performedBy.toJson(),
+      if (referenceNumber != null) 'referenceNumber': referenceNumber,
+      if (bank != null) 'bank': bank,
     };
   }
 }
@@ -411,6 +486,7 @@ class OrderInDb extends BaseOrder {
     super.quotationId,
     super.items = const [],
     super.services = const [],
+    super.discounts = const [],
     super.totalPrice = 0,
     super.paidAmount = 0,
     super.status = "pending",
@@ -446,10 +522,20 @@ class OrderInDb extends BaseOrder {
           .toList();
     }
 
+    List<OrderDiscount> parsedDiscounts = [];
+    if (json['discounts'] != null) {
+      parsedDiscounts = (json['discounts'] as List<dynamic>)
+          .map((e) => OrderDiscount.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    final int calculatedFallback = parsedItems.fold<int>(0, (sum, i) => sum + i.salePriceApplied) +
+        parsedServices.fold<int>(0, (sum, s) => sum + s.price) -
+        parsedDiscounts.fold<int>(0, (sum, d) => sum + d.appliedAmount);
+
     final int total = (json['totalPrice'] as num?)?.toInt() ??
         (json['salePriceApplied'] as num?)?.toInt() ??
-        (parsedItems.fold<int>(0, (sum, i) => sum + i.salePriceApplied) +
-            parsedServices.fold<int>(0, (sum, s) => sum + s.price));
+        (calculatedFallback > 0 ? calculatedFallback : 0);
 
     final patientInfoRaw = json['patientInfo'];
     final doctorInfoRaw = json['doctorInfo'];
@@ -470,6 +556,7 @@ class OrderInDb extends BaseOrder {
       quotationId: json['quotationId'] as String?,
       items: parsedItems,
       services: parsedServices,
+      discounts: parsedDiscounts,
       totalPrice: total,
       paidAmount: (json['paidAmount'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? "pending",
@@ -499,6 +586,7 @@ class OrderInDb extends BaseOrder {
       'quotationId': quotationId,
       'items': items.map((e) => e.toJson()).toList(),
       'services': services.map((e) => e.toJson()).toList(),
+      'discounts': discounts.map((e) => e.toJson()).toList(),
       'totalPrice': totalPrice > 0 ? totalPrice : salePriceApplied,
       'paidAmount': paidAmount,
       'status': status,

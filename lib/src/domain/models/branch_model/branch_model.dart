@@ -1,3 +1,31 @@
+class BranchBioanalyst {
+  final String name;
+  final String title;
+  final String code;
+
+  BranchBioanalyst({
+    required this.name,
+    required this.title,
+    required this.code,
+  });
+
+  factory BranchBioanalyst.fromJson(Map<String, dynamic> json) {
+    return BranchBioanalyst(
+      name: json['name'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      code: json['code'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'title': title,
+      'code': code,
+    };
+  }
+}
+
 class BaseBranch {
   final String name;
   final String address;
@@ -7,6 +35,7 @@ class BaseBranch {
   final String? logoUrl;
   final String? imageUrl;
   final String? isoLogoUrl;
+  final BranchBioanalyst? bioanalyst;
 
   BaseBranch({
     required this.name,
@@ -17,6 +46,7 @@ class BaseBranch {
     this.logoUrl,
     this.imageUrl,
     this.isoLogoUrl,
+    this.bioanalyst,
   });
 
   /// Logotipo efectivo de la sucursal (símbolo o icono).
@@ -44,6 +74,7 @@ class CreateBranch extends BaseBranch {
     super.logoUrl,
     super.imageUrl,
     super.isoLogoUrl,
+    super.bioanalyst,
   });
 
   Map<String, dynamic> toJson() {
@@ -56,6 +87,7 @@ class CreateBranch extends BaseBranch {
       if (logoUrl != null) 'logoUrl': logoUrl,
       if (imageUrl != null) 'imageUrl': imageUrl,
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
+      if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
     };
   }
 }
@@ -69,6 +101,7 @@ class UpdateBranch {
   final String? logoUrl;
   final String? imageUrl;
   final String? isoLogoUrl;
+  final BranchBioanalyst? bioanalyst;
 
   UpdateBranch({
     this.name,
@@ -79,6 +112,7 @@ class UpdateBranch {
     this.logoUrl,
     this.imageUrl,
     this.isoLogoUrl,
+    this.bioanalyst,
   });
 
   Map<String, dynamic> toJson() {
@@ -91,6 +125,7 @@ class UpdateBranch {
       if (logoUrl != null) 'logoUrl': logoUrl,
       if (imageUrl != null) 'imageUrl': imageUrl,
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
+      if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
     };
   }
 }
@@ -111,6 +146,7 @@ class BranchInDb extends BaseBranch {
     super.logoUrl,
     super.imageUrl,
     super.isoLogoUrl,
+    super.bioanalyst,
     required this.createdAt,
     this.updatedAt,
     this.isDeleted = false,
@@ -119,6 +155,7 @@ class BranchInDb extends BaseBranch {
   factory BranchInDb.fromJson(Map<String, dynamic> json) {
     final rawLogoUrl = json['logoUrl'] as String?;
     final rawImageUrl = json['imageUrl'] as String?;
+    final rawBioanalyst = json['bioanalyst'];
 
     return BranchInDb(
       id: json['id'] as String,
@@ -130,6 +167,9 @@ class BranchInDb extends BaseBranch {
       logoUrl: rawLogoUrl ?? rawImageUrl,
       imageUrl: rawImageUrl ?? rawLogoUrl,
       isoLogoUrl: json['isoLogoUrl'] as String?,
+      bioanalyst: rawBioanalyst is Map<String, dynamic>
+          ? BranchBioanalyst.fromJson(rawBioanalyst)
+          : null,
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
       isDeleted: json['isDeleted'] as bool? ?? false,
