@@ -2,11 +2,13 @@ class BranchBioanalyst {
   final String name;
   final String title;
   final String code;
+  final String? sealUrl;
 
   BranchBioanalyst({
     required this.name,
     required this.title,
     required this.code,
+    this.sealUrl,
   });
 
   factory BranchBioanalyst.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,7 @@ class BranchBioanalyst {
       name: json['name'] as String? ?? '',
       title: json['title'] as String? ?? '',
       code: json['code'] as String? ?? '',
+      sealUrl: json['sealUrl'] as String?,
     );
   }
 
@@ -22,6 +25,7 @@ class BranchBioanalyst {
       'name': name,
       'title': title,
       'code': code,
+      if (sealUrl != null) 'sealUrl': sealUrl,
     };
   }
 }
