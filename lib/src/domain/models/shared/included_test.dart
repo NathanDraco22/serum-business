@@ -4,6 +4,7 @@ class IncludedTest {
   final String labTestId;
   final String parameterName;
   final String medicalClassification;
+  final String subclassification;
   final String dataType;
   final String unitOfMeasure;
   final List<ReferenceValue> referenceValues;
@@ -15,6 +16,7 @@ class IncludedTest {
     required this.labTestId,
     required this.parameterName,
     this.medicalClassification = '',
+    this.subclassification = '',
     required this.dataType,
     this.unitOfMeasure = '',
     this.referenceValues = const [],
@@ -28,6 +30,7 @@ class IncludedTest {
       labTestId: json['labTestId'] as String? ?? '',
       parameterName: json['parameterName'] as String? ?? json['testName'] as String? ?? '',
       medicalClassification: json['medicalClassification'] as String? ?? '',
+      subclassification: json['subclassification'] as String? ?? '',
       dataType: json['dataType'] as String? ?? 'numeric',
       unitOfMeasure: json['unitOfMeasure'] as String? ?? '',
       referenceValues: (json['referenceValues'] as List<dynamic>?)
@@ -48,6 +51,7 @@ class IncludedTest {
       'labTestId': labTestId,
       'parameterName': parameterName,
       'medicalClassification': medicalClassification,
+      if (subclassification.isNotEmpty) 'subclassification': subclassification,
       'dataType': dataType,
       'unitOfMeasure': unitOfMeasure,
       'referenceValues': referenceValues.map((e) => e.toJson()).toList(),

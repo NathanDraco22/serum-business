@@ -5,6 +5,7 @@ class BaseLabTest {
   final String name;
   final String? code;
   final String commercialCategory;
+  final String subclassification;
   final int salePrice;
   final int salePrice2;
   final int costPrice;
@@ -18,6 +19,7 @@ class BaseLabTest {
   final List<String> qualitativeOptions;
   final String? expectedQualitativeValue;
   final String referenceText;
+  final bool isProfileParameter;
 
   String get parameterName => name;
   String get medicalClassification => commercialCategory;
@@ -26,6 +28,7 @@ class BaseLabTest {
     required this.name,
     this.code,
     this.commercialCategory = '',
+    this.subclassification = '',
     this.salePrice = 0,
     this.salePrice2 = 0,
     this.costPrice = 0,
@@ -39,6 +42,7 @@ class BaseLabTest {
     this.qualitativeOptions = const [],
     this.expectedQualitativeValue,
     this.referenceText = '',
+    this.isProfileParameter = false,
   });
 }
 
@@ -50,6 +54,7 @@ class CreateLabTest extends BaseLabTest {
     required super.name,
     super.code,
     super.commercialCategory = '',
+    super.subclassification = '',
     super.salePrice = 0,
     super.salePrice2 = 0,
     super.costPrice = 0,
@@ -63,6 +68,7 @@ class CreateLabTest extends BaseLabTest {
     super.qualitativeOptions = const [],
     super.expectedQualitativeValue,
     super.referenceText = '',
+    super.isProfileParameter = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -72,6 +78,7 @@ class CreateLabTest extends BaseLabTest {
       'parameterName': name,
       'code': code,
       'commercialCategory': commercialCategory,
+      'subclassification': subclassification,
       'salePrice': salePrice,
       'salePrice2': salePrice2,
       'costPrice': costPrice,
@@ -85,6 +92,7 @@ class CreateLabTest extends BaseLabTest {
       'qualitativeOptions': qualitativeOptions,
       'expectedQualitativeValue': expectedQualitativeValue,
       'referenceText': referenceText,
+      'isProfileParameter': isProfileParameter,
     };
   }
 }
@@ -94,6 +102,7 @@ class UpdateLabTest {
   final String? name;
   final String? code;
   final String? commercialCategory;
+  final String? subclassification;
   final int? salePrice;
   final int? salePrice2;
   final int? costPrice;
@@ -107,12 +116,14 @@ class UpdateLabTest {
   final List<String>? qualitativeOptions;
   final String? expectedQualitativeValue;
   final String? referenceText;
+  final bool? isProfileParameter;
 
   UpdateLabTest({
     this.branchId,
     this.name,
     this.code,
     this.commercialCategory,
+    this.subclassification,
     this.salePrice,
     this.salePrice2,
     this.costPrice,
@@ -126,6 +137,7 @@ class UpdateLabTest {
     this.qualitativeOptions,
     this.expectedQualitativeValue,
     this.referenceText,
+    this.isProfileParameter,
   });
 
   Map<String, dynamic> toJson() {
@@ -135,6 +147,7 @@ class UpdateLabTest {
       if (name != null) 'parameterName': name,
       if (code != null) 'code': code,
       if (commercialCategory != null) 'commercialCategory': commercialCategory,
+      if (subclassification != null) 'subclassification': subclassification,
       if (salePrice != null) 'salePrice': salePrice,
       if (salePrice2 != null) 'salePrice2': salePrice2,
       if (costPrice != null) 'costPrice': costPrice,
@@ -151,6 +164,7 @@ class UpdateLabTest {
       if (expectedQualitativeValue != null)
         'expectedQualitativeValue': expectedQualitativeValue,
       if (referenceText != null) 'referenceText': referenceText,
+      if (isProfileParameter != null) 'isProfileParameter': isProfileParameter,
     };
   }
 }
@@ -167,6 +181,7 @@ class LabTestInDb extends BaseLabTest {
     required super.name,
     super.code,
     super.commercialCategory = '',
+    super.subclassification = '',
     super.salePrice = 0,
     super.salePrice2 = 0,
     super.costPrice = 0,
@@ -180,6 +195,7 @@ class LabTestInDb extends BaseLabTest {
     super.qualitativeOptions = const [],
     super.expectedQualitativeValue,
     super.referenceText = '',
+    super.isProfileParameter = false,
     this.commercial,
     required this.createdAt,
     this.updatedAt,
@@ -192,6 +208,7 @@ class LabTestInDb extends BaseLabTest {
     final rawCategory = json['commercialCategory'] as String? ??
         json['medicalClassification'] as String? ??
         '';
+    final rawSubclassification = json['subclassification'] as String? ?? '';
     final rawCommercial = json['commercial'] != null
         ? LabTestCommercial.fromJson(json['commercial'] as Map<String, dynamic>)
         : null;
@@ -204,6 +221,7 @@ class LabTestInDb extends BaseLabTest {
       name: rawName,
       code: json['code'] as String?,
       commercialCategory: rawCategory,
+      subclassification: rawSubclassification,
       salePrice: (json['salePrice'] as num?)?.toInt() ??
           rawCommercial?.salePrice ??
           0,
@@ -232,6 +250,7 @@ class LabTestInDb extends BaseLabTest {
           const [],
       expectedQualitativeValue: json['expectedQualitativeValue'] as String?,
       referenceText: json['referenceText'] as String? ?? '',
+      isProfileParameter: json['isProfileParameter'] as bool? ?? false,
       commercial: rawCommercial,
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
@@ -246,6 +265,7 @@ class LabTestInDb extends BaseLabTest {
       'parameterName': name,
       'code': code,
       'commercialCategory': commercialCategory,
+      'subclassification': subclassification,
       'salePrice': salePrice,
       'salePrice2': salePrice2,
       'costPrice': costPrice,
@@ -259,6 +279,7 @@ class LabTestInDb extends BaseLabTest {
       'qualitativeOptions': qualitativeOptions,
       'expectedQualitativeValue': expectedQualitativeValue,
       'referenceText': referenceText,
+      'isProfileParameter': isProfileParameter,
       'commercial': commercial?.toJson(),
       'createdAt': createdAt,
       'updatedAt': updatedAt,
@@ -271,6 +292,7 @@ class LabTestInDb extends BaseLabTest {
     String? name,
     String? code,
     String? commercialCategory,
+    String? subclassification,
     int? salePrice,
     int? salePrice2,
     int? costPrice,
@@ -284,6 +306,7 @@ class LabTestInDb extends BaseLabTest {
     List<String>? qualitativeOptions,
     String? expectedQualitativeValue,
     String? referenceText,
+    bool? isProfileParameter,
     LabTestCommercial? commercial,
     int? createdAt,
     int? updatedAt,
@@ -294,6 +317,7 @@ class LabTestInDb extends BaseLabTest {
       name: name ?? this.name,
       code: code ?? this.code,
       commercialCategory: commercialCategory ?? this.commercialCategory,
+      subclassification: subclassification ?? this.subclassification,
       salePrice: salePrice ?? this.salePrice,
       salePrice2: salePrice2 ?? this.salePrice2,
       costPrice: costPrice ?? this.costPrice,
@@ -309,6 +333,7 @@ class LabTestInDb extends BaseLabTest {
       expectedQualitativeValue:
           expectedQualitativeValue ?? this.expectedQualitativeValue,
       referenceText: referenceText ?? this.referenceText,
+      isProfileParameter: isProfileParameter ?? this.isProfileParameter,
       commercial: commercial ?? this.commercial,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

@@ -9,6 +9,7 @@ class PatientInfo {
   final String address;
   final String? cardId;
   final String? email;
+  final int? explicitAge;
 
   PatientInfo({
     required this.name,
@@ -18,7 +19,21 @@ class PatientInfo {
     this.address = '',
     this.cardId,
     this.email,
-  });
+    int? age,
+  }) : explicitAge = age;
+
+  int get age {
+    if (explicitAge != null && explicitAge! >= 0) return explicitAge!;
+    if (dateOfBirth <= 0) return 0;
+    final birth = DateTime.fromMillisecondsSinceEpoch(dateOfBirth);
+    final today = DateTime.now();
+    int a = today.year - birth.year;
+    if (today.month < birth.month ||
+        (today.month == birth.month && today.day < birth.day)) {
+      a--;
+    }
+    return a >= 0 ? a : 0;
+  }
 
   factory PatientInfo.fromJson(Map<String, dynamic> json) {
     return PatientInfo(
@@ -29,6 +44,7 @@ class PatientInfo {
       address: json['address'] as String? ?? '',
       cardId: json['cardId'] as String?,
       email: json['email'] as String?,
+      age: json['age'] as int?,
     );
   }
 
@@ -39,6 +55,7 @@ class PatientInfo {
       'gender': gender,
       'phone': phone,
       'address': address,
+      'age': age,
       if (cardId != null) 'cardId': cardId,
       if (email != null) 'email': email,
     };

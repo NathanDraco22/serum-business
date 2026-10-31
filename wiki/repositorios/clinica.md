@@ -32,6 +32,9 @@ Catálogo unificado de análisis clínicos y paquetes comerciales (Packs).
 
 ### Características:
 - Distingue análisis individuales de paquetes (`isPack: true`).
+- **Subclasificación Clínica (`subclassification`)**: Permite categorizar subseries analíticas (ej. *Serie Roja*, *Serie Blanca*, *Físico-Químico*, etc.) complementando la especialidad médica (`commercialCategory`).
+- **Parámetros Internos de Perfiles (`isProfileParameter: bool`)**: Identifica parámetros creados directamente dentro de un perfil clínico para evitar ruido visual en el catálogo de venta comercial.
+- **Propagación Clínica**: La `subclassification` se propaga hacia `IncludedTest` y `OrderTestResult`, posibilitando la agrupación por subseries en los informes de resultados (PDF y visor en pantalla).
 - Almacena rangos de referencia por edad y género (`ReferenceValue`).
 - Soporta tipos de resultado: `numeric`, `qualitative`, `boolean`, `text`.
 - Búsqueda en vivo: `searchLabTestsByText(String query)` (con retorno inmediato de `[]` ante cadenas vacías para evitar cargas innecesarias).
