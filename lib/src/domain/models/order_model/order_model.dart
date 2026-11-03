@@ -387,6 +387,7 @@ class UpdateOrder {
   final bool? isBlocked;
   final OrderApproval? approval;
   final String? notes;
+  final bool clearDoctor;
 
   String? get description => notes;
 
@@ -407,14 +408,19 @@ class UpdateOrder {
     this.isBlocked,
     this.approval,
     this.notes,
+    this.clearDoctor = false,
   });
 
   Map<String, dynamic> toJson() {
     return {
       if (patientId != null) 'patientId': patientId,
-      if (doctorId != null) 'doctorId': doctorId,
-      if (patientInfo != null) 'patientInfo': patientInfo!.toJson(),
-      if (doctorInfo != null) 'doctorInfo': doctorInfo!.toJson(),
+      if (clearDoctor) ...{
+        'doctorId': null,
+        'doctorInfo': null,
+      } else ...{
+        if (doctorId != null) 'doctorId': doctorId,
+        if (doctorInfo != null) 'doctorInfo': doctorInfo!.toJson(),
+      },
       if (quotationId != null) 'quotationId': quotationId,
       if (items != null) 'items': items!.map((e) => e.toJson()).toList(),
       if (services != null) 'services': services!.map((e) => e.toJson()).toList(),
