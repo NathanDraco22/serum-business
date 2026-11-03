@@ -1,34 +1,8 @@
-class BranchBioanalyst {
-  final String name;
-  final String title;
-  final String code;
-  final String? sealUrl;
+import '../shared/aux_bioanalyst.dart';
+import '../shared/bioanalyst_info.dart';
 
-  BranchBioanalyst({
-    required this.name,
-    required this.title,
-    required this.code,
-    this.sealUrl,
-  });
-
-  factory BranchBioanalyst.fromJson(Map<String, dynamic> json) {
-    return BranchBioanalyst(
-      name: json['name'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      code: json['code'] as String? ?? '',
-      sealUrl: json['sealUrl'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'title': title,
-      'code': code,
-      if (sealUrl != null) 'sealUrl': sealUrl,
-    };
-  }
-}
+export '../shared/aux_bioanalyst.dart';
+export '../shared/bioanalyst_info.dart';
 
 class BaseBranch {
   final String name;
@@ -39,7 +13,8 @@ class BaseBranch {
   final String? logoUrl;
   final String? imageUrl;
   final String? isoLogoUrl;
-  final BranchBioanalyst? bioanalyst;
+  final BioanalystInfo? bioanalyst;
+  final List<AuxBioanalyst>? auxBio;
 
   BaseBranch({
     required this.name,
@@ -51,6 +26,7 @@ class BaseBranch {
     this.imageUrl,
     this.isoLogoUrl,
     this.bioanalyst,
+    this.auxBio,
   });
 
   /// Logotipo efectivo de la sucursal (símbolo o icono).
@@ -79,6 +55,7 @@ class CreateBranch extends BaseBranch {
     super.imageUrl,
     super.isoLogoUrl,
     super.bioanalyst,
+    super.auxBio,
   });
 
   Map<String, dynamic> toJson() {
@@ -92,6 +69,7 @@ class CreateBranch extends BaseBranch {
       if (imageUrl != null) 'imageUrl': imageUrl,
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
       if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
+      if (auxBio != null) 'auxBio': auxBio!.map((e) => e.toJson()).toList(),
     };
   }
 }
@@ -105,7 +83,8 @@ class UpdateBranch {
   final String? logoUrl;
   final String? imageUrl;
   final String? isoLogoUrl;
-  final BranchBioanalyst? bioanalyst;
+  final BioanalystInfo? bioanalyst;
+  final List<AuxBioanalyst>? auxBio;
 
   UpdateBranch({
     this.name,
@@ -117,6 +96,7 @@ class UpdateBranch {
     this.imageUrl,
     this.isoLogoUrl,
     this.bioanalyst,
+    this.auxBio,
   });
 
   Map<String, dynamic> toJson() {
@@ -130,6 +110,7 @@ class UpdateBranch {
       if (imageUrl != null) 'imageUrl': imageUrl,
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
       if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
+      if (auxBio != null) 'auxBio': auxBio!.map((e) => e.toJson()).toList(),
     };
   }
 }
@@ -151,6 +132,7 @@ class BranchInDb extends BaseBranch {
     super.imageUrl,
     super.isoLogoUrl,
     super.bioanalyst,
+    super.auxBio,
     required this.createdAt,
     this.updatedAt,
     this.isDeleted = false,
@@ -160,6 +142,15 @@ class BranchInDb extends BaseBranch {
     final rawLogoUrl = json['logoUrl'] as String?;
     final rawImageUrl = json['imageUrl'] as String?;
     final rawBioanalyst = json['bioanalyst'];
+    final rawAuxBio = json['auxBio'];
+
+    List<AuxBioanalyst>? auxBioList;
+    if (rawAuxBio is List) {
+      auxBioList = rawAuxBio
+          .whereType<Map<String, dynamic>>()
+          .map((e) => AuxBioanalyst.fromJson(e))
+          .toList();
+    }
 
     return BranchInDb(
       id: json['id'] as String,
@@ -172,12 +163,12 @@ class BranchInDb extends BaseBranch {
       imageUrl: rawImageUrl ?? rawLogoUrl,
       isoLogoUrl: json['isoLogoUrl'] as String?,
       bioanalyst: rawBioanalyst is Map<String, dynamic>
-          ? BranchBioanalyst.fromJson(rawBioanalyst)
+          ? BioanalystInfo.fromJson(rawBioanalyst)
           : null,
+      auxBio: auxBioList,
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
       isDeleted: json['isDeleted'] as bool? ?? false,
     );
   }
 }
-
