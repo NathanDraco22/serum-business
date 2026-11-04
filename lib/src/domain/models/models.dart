@@ -18,5 +18,6 @@ export 'receipt_model/receipt_model.dart';
 export 'app_setting/app_setting_model.dart';
 export 'import_catalog_result/import_catalog_result.dart';
 export 'import_catalog_result/import_branch_prices_result.dart';
+export 'import_catalog_result/update_import_result.dart';
 export 'servin/servin.dart';
 export 'shared/export.dart';
