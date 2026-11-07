@@ -21,9 +21,11 @@ class CashShiftsDataSource with HttpService {
   Future<Map<String, dynamic>?> getCurrentCashShift(
     String userId, {
     String? branchId,
+    bool ignoreBranch = false,
   }) async {
     final queryParams = {'user_id': userId};
     if (branchId != null) queryParams['branch_id'] = branchId;
+    if (ignoreBranch) queryParams['ignore_branch'] = 'true';
     final uri = HttpTools.generateUri(
       "$_endpoint/current",
       queryParameters: queryParams,

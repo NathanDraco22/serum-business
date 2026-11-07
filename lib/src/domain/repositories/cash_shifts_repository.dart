@@ -22,10 +22,12 @@ class CashShiftsRepository with ReactiveRepository<CashShiftInDb> {
   Future<CashShiftInDb?> getCurrentShift(
     String userId, {
     String? branchId,
+    bool ignoreBranch = false,
   }) async {
     final result = await cashShiftsDataSource.getCurrentCashShift(
       userId,
       branchId: branchId,
+      ignoreBranch: ignoreBranch,
     );
     if (result == null) return null;
     return CashShiftInDb.fromJson(result);
