@@ -1,4 +1,4 @@
-import 'reference_value.dart';
+import 'package:serum_business/src/domain/models/shared/reference_value.dart';
 
 /// Evalúa los flags clínicos de un resultado a partir del valor capturado y del
 /// rango de referencia resuelto para el paciente.

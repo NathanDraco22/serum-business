@@ -17,6 +17,7 @@ Este proyecto es el paquete central de lógica de negocio y repositorios del sis
 - Toda la lógica debe ser portable a CLI, backend o frontend.
 
 ### 2. Estructura de Capas
+- **`lib/src/core/`**: Reglas y servicios de dominio puros y compartidos (resolución de rangos de referencia, evaluación de alertas clínicas). No deben depender de Flutter, HTTP ni persistencia.
 - **`lib/src/domain/models/`**: Clases inmutables con constructores `const`, métodos `fromJson` y `toJson`.
 - **`lib/src/data/`**: DataSources que interactúan vía HTTP con el servidor utilizando `HttpService`.
 - **`lib/src/domain/repositories/`**: Repositorios de negocio que exponen métodos de alto nivel y pueden heredar de `ReactiveRepository` para soporte de streams.

@@ -322,6 +322,61 @@ void main() {
     });
   });
 
+  group('ReferenceValueResolver.formatReferenceAge', () {
+    test('respeta la unidad configurada del rango', () {
+      expect(
+        ReferenceValueResolver.formatReferenceAge(
+          ref(
+            minAgeDays: 20 * 365,
+            maxAgeDays: 25 * 365,
+            ageUnit: 'years',
+            useAge: true,
+          ),
+        ),
+        '20 - 25 años',
+      );
+      expect(
+        ReferenceValueResolver.formatReferenceAge(
+          ref(minAgeDays: 30, maxAgeDays: 360, ageUnit: 'months', useAge: true),
+        ),
+        '1 - 12 meses',
+      );
+      expect(
+        ReferenceValueResolver.formatReferenceAge(
+          ref(minAgeDays: 0, maxAgeDays: 28, ageUnit: 'days', useAge: true),
+        ),
+        '0 - 28 días',
+      );
+    });
+
+    test('devuelve vacío cuando el rango no evalúa edad', () {
+      expect(
+        ReferenceValueResolver.formatReferenceAge(ref(useAge: false)),
+        isEmpty,
+      );
+    });
+
+    test('maneja todas las edades y rangos sin límite superior', () {
+      expect(
+        ReferenceValueResolver.formatReferenceAge(
+          ref(minAgeDays: 0, maxAgeDays: 43800, ageUnit: 'years', useAge: true),
+        ),
+        'Todas las edades',
+      );
+      expect(
+        ReferenceValueResolver.formatReferenceAge(
+          ref(
+            minAgeDays: 18 * 365,
+            maxAgeDays: 0,
+            ageUnit: 'years',
+            useAge: true,
+          ),
+        ),
+        'Desde 18 años',
+      );
+    });
+  });
+
   group('ReferenceValueResolver.formatAgeRange', () {
     test('formatea días, meses y años', () {
       expect(

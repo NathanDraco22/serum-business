@@ -46,8 +46,8 @@ Este documento es el **mapa central y rector** del paquete Dart puro `serum_busi
 ```
 
 ### Modelos Clínicos Compartidos:
-- `ReferenceValueResolver` resuelve el rango de referencia demográfico (edad exacta en días y género normalizado). La edad requiere `referenceDateMs` explícito (normalmente `order.createdAt`) y no depende de `DateTime.now()`.
-- `ClinicalAlertEvaluator` recalcula los flags clínicos (`H`, `L`, `ABNORMAL`) desde el valor capturado y el rango resuelto; `NORMAL` equivale a ausencia de alerta y nunca se prioriza un `alertFlag` persistido sobre el rango actual.
+- `ReferenceValueResolver` (en `lib/src/core/`) resuelve el rango de referencia demográfico (edad exacta en días y género normalizado). La edad requiere `referenceDateMs` explícito (normalmente `order.createdAt`) y no depende de `DateTime.now()`.
+- `ClinicalAlertEvaluator` (en `lib/src/core/`) recalcula los flags clínicos (`H`, `L`, `ABNORMAL`) desde el valor capturado y el rango resuelto; `NORMAL` equivale a ausencia de alerta y nunca se prioriza un `alertFlag` persistido sobre el rango actual.
 
 ### Convenciones Críticas de Datos:
 - **Montos Monetarios:** Siempre enteros (`int`) en **centavos**. $100.00 MXN se representa como `10000`. Nunca números de punto flotante (`double`) en cálculos contables.
@@ -96,6 +96,7 @@ serum_business/
         │   ├── services.dart           # Barrel file de servicios
         │   └── exceptions/
         │       └── http_exceptions.dart# Jerarquía de excepciones tipadas (Unauthorized, NotFound, etc.)
+        ├── core/                       # Reglas de dominio puras (rangos de referencia y alertas clínicas)
         ├── domain/
         │   ├── models/                 # Modelos de datos inmutables con soporte JSON
         │   ├── repositories/           # Repositorios de negocio

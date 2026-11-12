@@ -1,4 +1,4 @@
-import 'package:serum_business/src/domain/models/shared/clinical_alert_evaluator.dart';
+import 'package:serum_business/src/core/clinical_alert_evaluator.dart';
 import 'package:serum_business/src/domain/models/shared/included_test.dart';
 import 'package:serum_business/src/domain/models/shared/reference_value.dart';
 

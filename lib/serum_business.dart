@@ -1,8 +1,8 @@
 export 'src/data/data_sources.dart';
 
+export 'src/core/clinical_alert_evaluator.dart';
+export 'src/core/reference_value_resolver.dart';
 export 'src/domain/models/models.dart';
-export 'src/domain/models/shared/clinical_alert_evaluator.dart';
-export 'src/domain/models/shared/reference_value_resolver.dart';
 export 'src/domain/query_params/export.dart';
 export 'src/domain/repositories/repositories.dart';
 export 'src/domain/responses/list_response.dart';

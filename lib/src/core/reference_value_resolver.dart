@@ -1,4 +1,4 @@
-import 'reference_value.dart';
+import 'package:serum_business/src/domain/models/shared/reference_value.dart';
 
 /// Resultado de resolver el valor de referencia aplicable a un paciente.
 class ReferenceResolution {
@@ -181,6 +181,42 @@ class ReferenceValueResolver {
 
   /// Formatea una edad en días para mostrarla en la UI.
   static String formatAgeDays(int days) => _formatAgeDays(days);
+
+  /// Formatea el criterio de edad de una referencia usando su `ageUnit`.
+  ///
+  /// Devuelve una cadena vacía si el rango no evalúa edad. Respeta la unidad
+  /// configurada en el catálogo (`days`, `months`, `years`) para que un rango
+  /// de 1–12 meses se muestre como tal y no como “1 mes - 1 año”.
+  static String formatReferenceAge(ReferenceValue ref) {
+    if (!ref.useAge) return '';
+
+    final factor = switch (ref.ageUnit) {
+      'days' => 1,
+      'months' => 30,
+      _ => 365,
+    };
+    final min = ref.minAgeDays <= 0 ? 0 : (ref.minAgeDays / factor).round();
+    final max = ref.maxAgeDays <= 0 ? 0 : (ref.maxAgeDays / factor).round();
+
+    if (min <= 0 && (max <= 0 || ref.maxAgeDays >= 36500)) {
+      return 'Todas las edades';
+    }
+
+    String formatValue(int value) {
+      if (ref.ageUnit == 'days') {
+        return '$value ${value == 1 ? 'día' : 'días'}';
+      }
+      if (ref.ageUnit == 'months') {
+        return '$value ${value == 1 ? 'mes' : 'meses'}';
+      }
+      return '$value ${value == 1 ? 'año' : 'años'}';
+    }
+
+    if (max <= 0) return 'Desde ${formatValue(min)}';
+    if (min <= 0) return '0 - ${formatValue(max)}';
+    if (min == max) return formatValue(min);
+    return '$min - ${formatValue(max)}';
+  }
 
   /// Formatea una cantidad de días en días, meses o años.
   static String _formatAgeDays(int days) {
