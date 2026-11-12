@@ -1,6 +1,9 @@
 export 'src/data/data_sources.dart';
 
 export 'src/core/clinical_alert_evaluator.dart';
+export 'src/core/evaluation/clinical_evaluation.dart';
+export 'src/core/evaluation/clinical_evaluation_pipeline.dart';
+export 'src/core/evaluation/clinical_evaluation_steps.dart';
 export 'src/core/reference_value_resolver.dart';
 export 'src/domain/models/models.dart';
 export 'src/domain/query_params/export.dart';
