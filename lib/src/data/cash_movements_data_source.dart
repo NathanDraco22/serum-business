@@ -12,15 +12,17 @@ class CashMovementsDataSource with HttpService {
   final _endpoint = "/cash-movements";
 
   Future<Map<String, dynamic>> createCashMovement(
-      Map<String, dynamic> cashMovement) async {
+    Map<String, dynamic> cashMovement,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, cashMovement, headers: headers);
     return res;
   }
 
-  Future<Map<String, dynamic>> getAllCashMovements(
-      {CashMovementQueryParams? queryParams}) async {
+  Future<Map<String, dynamic>> getAllCashMovements({
+    CashMovementQueryParams? queryParams,
+  }) async {
     final uri = HttpTools.generateUri(
       _endpoint,
       queryParameters: queryParams?.toQueryParameters(),
@@ -31,7 +33,8 @@ class CashMovementsDataSource with HttpService {
   }
 
   Future<Map<String, dynamic>?> getCashMovementById(
-      String cashMovementId) async {
+    String cashMovementId,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/$cashMovementId");
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
@@ -49,7 +52,8 @@ class CashMovementsDataSource with HttpService {
   }
 
   Future<Map<String, dynamic>?> deleteCashMovementById(
-      String cashMovementId) async {
+    String cashMovementId,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/$cashMovementId");
     final headers = HttpTools.generateAuthHeaders();
     final res = await deleteQuery(uri, headers: headers);

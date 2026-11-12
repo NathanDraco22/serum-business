@@ -10,8 +10,12 @@ class CashTransactionsRepository {
 
   List<CashTransactionInDb> _cashTransactions = [];
 
-  Future<List<CashTransactionInDb>> getAllCashTransactions({CashTransactionQueryParams? queryParams}) async {
-    final results = await cashTransactionsDataSource.getAllCashTransactions(queryParams: queryParams);
+  Future<List<CashTransactionInDb>> getAllCashTransactions({
+    CashTransactionQueryParams? queryParams,
+  }) async {
+    final results = await cashTransactionsDataSource.getAllCashTransactions(
+      queryParams: queryParams,
+    );
     final response = ListResponse<CashTransactionInDb>.fromJson(
       results,
       CashTransactionInDb.fromJson,

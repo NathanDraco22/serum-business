@@ -41,3 +41,4 @@ timestamp: 2026-10-21T15:45:00Z
 
 - **Inmutabilidad:** Los modelos promueven constructores constantes y métodos de copia (`copyWith`) para prevenir mutaciones colaterales de estado.
 - **Tipado Fuerte:** Toda respuesta JSON es inmediatamente convertida a objetos fuertemente tipados.
+- **Formatter desacoplado:** `NumberFormatter` sigue siendo puro. La capa de aplicación registra un `CurrencyResolver` (`configureCurrencyResolver`) y el formatter consulta la moneda vigente sin importar Cubits ni `GetIt`. `AppCurrency` vive en `domain/models/app_setting/`. Ver [Formatter Global con Resolver Inyectado](/wiki/convenciones/global-formatter-resolver.md).

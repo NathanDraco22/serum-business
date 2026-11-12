@@ -3,7 +3,11 @@ import '../serum_client.dart';
 class HttpTools {
   static const String _api = "/api";
 
-  static Uri generateUri(String path, {int version = 1, Map<String, String>? queryParameters}) {
+  static Uri generateUri(
+    String path, {
+    int version = 1,
+    Map<String, String>? queryParameters,
+  }) {
     assert(path.startsWith("/"));
 
     final config = SerumClient.instance;
@@ -15,8 +19,8 @@ class HttpTools {
     final authority = decodedBase.authority.isNotEmpty
         ? decodedBase.authority
         : (decodedBase.hasPort
-            ? "${decodedBase.host}:${decodedBase.port}"
-            : decodedBase.host);
+              ? "${decodedBase.host}:${decodedBase.port}"
+              : decodedBase.host);
 
     if (decodedBase.scheme == "https") {
       return Uri.https(authority, fullPath, queryParameters);
@@ -33,17 +37,13 @@ class HttpTools {
       "X-Agent": "Serum",
       if (servinNickname != null && servinNickname.isNotEmpty)
         "x-servin": servinNickname,
-      if (branchId != null && branchId.isNotEmpty)
-        "x-branch": branchId,
+      if (branchId != null && branchId.isNotEmpty) "x-branch": branchId,
     };
   }
 
   static Map<String, String> generateAuthHeaders() {
     final config = SerumClient.instance;
     final token = config.authToken;
-    return {
-      ...generateTenantHeaders(),
-      "Authorization": "Bearer $token",
-    };
+    return {...generateTenantHeaders(), "Authorization": "Bearer $token"};
   }
 }

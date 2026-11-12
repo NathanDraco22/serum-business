@@ -3,7 +3,7 @@ type: reference
 title: Repositorios de Gestión y Operación
 description: Detalle de repositorios de sucursales, usuarios, roles, cotizaciones, importaciones y reportes.
 tags: [repositories, management, users, roles, branches, quotations, reports]
-timestamp: 2026-10-21T15:45:00Z
+timestamp: 2026-11-10T12:00:00Z
 ---
 
 # Repositorios de Gestión y Operación
@@ -14,7 +14,8 @@ Esta sección documenta los repositorios de soporte administrativo, catálogo or
 
 ## 1. `BranchesRepository` (`branches_repository.dart`)
 - Sedes o sucursales físicas del laboratorio.
-- Datos de contacto, dirección y prefijo de folio de órdenes.
+- Datos de contacto, dirección, ciudad/localidad (`city`, por defecto `""`) y prefijo de folio de órdenes.
+- `BranchInDb.displayName` compone el nombre visible como `Nombre - Ciudad` (omite la ciudad si está vacía o ya forma parte del nombre) para su uso consistente en desktop, mobile, reportes y PDFs.
 
 ## 2. `UsersRepository` (`users_repository.dart`)
 - Control de personal del laboratorio (recepcionistas, químicos, administradores).

@@ -7,4 +7,3 @@ abstract class SerumClientConfig {
   String? get servinNickname;
   set servinNickname(String? nickname);
 }
-

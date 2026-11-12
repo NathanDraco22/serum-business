@@ -12,18 +12,21 @@ class ReceiptsRepository with ReactiveRepository<ReceiptInDb> {
   List<ReceiptInDb> _receipts = [];
 
   Future<ReceiptInDb> createReceipt(CreateReceipt createReceipt) async {
-    final result =
-        await receiptsDataSource.createReceipt(createReceipt.toJson());
+    final result = await receiptsDataSource.createReceipt(
+      createReceipt.toJson(),
+    );
     final newReceipt = ReceiptInDb.fromJson(result);
     _receipts = [newReceipt, ..._receipts];
     notifyItemCreated(newReceipt);
     return newReceipt;
   }
 
-  Future<List<ReceiptInDb>> getAllReceipts(
-      {ReceiptQueryParams? queryParams}) async {
-    final results =
-        await receiptsDataSource.getAllReceipts(queryParams: queryParams);
+  Future<List<ReceiptInDb>> getAllReceipts({
+    ReceiptQueryParams? queryParams,
+  }) async {
+    final results = await receiptsDataSource.getAllReceipts(
+      queryParams: queryParams,
+    );
     final response = ListResponse<ReceiptInDb>.fromJson(
       results,
       ReceiptInDb.fromJson,

@@ -1,5 +1,8 @@
 abstract class TokenStorage {
-  Future<void> saveTokens({required String token, required String refreshToken});
+  Future<void> saveTokens({
+    required String token,
+    required String refreshToken,
+  });
   Future<String?> getToken();
   Future<String?> getRefreshToken();
   Future<void> clearTokens();
@@ -10,7 +13,10 @@ class InMemoryTokenStorage implements TokenStorage {
   String? _refreshToken;
 
   @override
-  Future<void> saveTokens({required String token, required String refreshToken}) async {
+  Future<void> saveTokens({
+    required String token,
+    required String refreshToken,
+  }) async {
     _token = token;
     _refreshToken = refreshToken;
   }

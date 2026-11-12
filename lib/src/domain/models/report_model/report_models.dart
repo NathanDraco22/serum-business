@@ -27,18 +27,14 @@ class PaymentMethodsBreakdown {
       PaymentMethodsBreakdown.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'cash': cash,
-        'card': card,
-        'transfer': transfer,
-      };
+    'cash': cash,
+    'card': card,
+    'transfer': transfer,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
-  PaymentMethodsBreakdown copyWith({
-    int? cash,
-    int? card,
-    int? transfer,
-  }) {
+  PaymentMethodsBreakdown copyWith({int? cash, int? card, int? transfer}) {
     return PaymentMethodsBreakdown(
       cash: cash ?? this.cash,
       card: card ?? this.card,
@@ -79,7 +75,8 @@ class FinancialBranchReport {
       transactionsCount: (map['transactionsCount'] as num?)?.toInt() ?? 0,
       paymentMethods: map['paymentMethods'] is Map<String, dynamic>
           ? PaymentMethodsBreakdown.fromMap(
-              map['paymentMethods'] as Map<String, dynamic>)
+              map['paymentMethods'] as Map<String, dynamic>,
+            )
           : const PaymentMethodsBreakdown(),
     );
   }
@@ -88,15 +85,15 @@ class FinancialBranchReport {
       FinancialBranchReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'branchId': branchId,
-        'branchName': branchName,
-        'totalBilled': totalBilled,
-        'totalCollected': totalCollected,
-        'pendingReceivables': pendingReceivables,
-        'ordersCount': ordersCount,
-        'transactionsCount': transactionsCount,
-        'paymentMethods': paymentMethods.toMap(),
-      };
+    'branchId': branchId,
+    'branchName': branchName,
+    'totalBilled': totalBilled,
+    'totalCollected': totalCollected,
+    'pendingReceivables': pendingReceivables,
+    'ordersCount': ordersCount,
+    'transactionsCount': transactionsCount,
+    'paymentMethods': paymentMethods.toMap(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -149,7 +146,8 @@ class FinancialSummaryReport {
       transactionsCount: (map['transactionsCount'] as num?)?.toInt() ?? 0,
       paymentMethods: map['paymentMethods'] is Map<String, dynamic>
           ? PaymentMethodsBreakdown.fromMap(
-              map['paymentMethods'] as Map<String, dynamic>)
+              map['paymentMethods'] as Map<String, dynamic>,
+            )
           : const PaymentMethodsBreakdown(),
     );
   }
@@ -158,13 +156,13 @@ class FinancialSummaryReport {
       FinancialSummaryReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'totalBilled': totalBilled,
-        'totalCollected': totalCollected,
-        'pendingReceivables': pendingReceivables,
-        'ordersCount': ordersCount,
-        'transactionsCount': transactionsCount,
-        'paymentMethods': paymentMethods.toMap(),
-      };
+    'totalBilled': totalBilled,
+    'totalCollected': totalCollected,
+    'pendingReceivables': pendingReceivables,
+    'ordersCount': ordersCount,
+    'transactionsCount': transactionsCount,
+    'paymentMethods': paymentMethods.toMap(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -206,11 +204,14 @@ class FinancialReportResponse {
       endDate: (map['endDate'] as num?)?.toInt() ?? 0,
       summary: map['summary'] is Map<String, dynamic>
           ? FinancialSummaryReport.fromMap(
-              map['summary'] as Map<String, dynamic>)
+              map['summary'] as Map<String, dynamic>,
+            )
           : const FinancialSummaryReport(),
-      byBranch: (map['byBranch'] as List<dynamic>?)
-              ?.map((e) =>
-                  FinancialBranchReport.fromMap(e as Map<String, dynamic>))
+      byBranch:
+          (map['byBranch'] as List<dynamic>?)
+              ?.map(
+                (e) => FinancialBranchReport.fromMap(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );
@@ -220,11 +221,11 @@ class FinancialReportResponse {
       FinancialReportResponse.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'startDate': startDate,
-        'endDate': endDate,
-        'summary': summary.toMap(),
-        'byBranch': byBranch.map((e) => e.toMap()).toList(),
-      };
+    'startDate': startDate,
+    'endDate': endDate,
+    'summary': summary.toMap(),
+    'byBranch': byBranch.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -262,12 +263,12 @@ class DoctorOrderItem {
       DoctorOrderItem.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'doctorId': doctorId,
-        'doctorName': doctorName,
-        'specialty': specialty,
-        'totalOrders': totalOrders,
-        'totalRevenue': totalRevenue,
-      };
+    'doctorId': doctorId,
+    'doctorName': doctorName,
+    'specialty': specialty,
+    'totalOrders': totalOrders,
+    'totalRevenue': totalRevenue,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -303,7 +304,8 @@ class TopDoctorsBranchReport {
     return TopDoctorsBranchReport(
       branchId: map['branchId']?.toString() ?? '',
       branchName: map['branchName']?.toString() ?? '',
-      doctors: (map['doctors'] as List<dynamic>?)
+      doctors:
+          (map['doctors'] as List<dynamic>?)
               ?.map((e) => DoctorOrderItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -314,10 +316,10 @@ class TopDoctorsBranchReport {
       TopDoctorsBranchReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'branchId': branchId,
-        'branchName': branchName,
-        'doctors': doctors.map((e) => e.toMap()).toList(),
-      };
+    'branchId': branchId,
+    'branchName': branchName,
+    'doctors': doctors.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -337,7 +339,8 @@ class TopDoctorsSummary {
     return TopDoctorsSummary(
       totalOrders: (map['totalOrders'] as num?)?.toInt() ?? 0,
       totalRevenue: (map['totalRevenue'] as num?)?.toInt() ?? 0,
-      topDoctors: (map['topDoctors'] as List<dynamic>?)
+      topDoctors:
+          (map['topDoctors'] as List<dynamic>?)
               ?.map((e) => DoctorOrderItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -348,10 +351,10 @@ class TopDoctorsSummary {
       TopDoctorsSummary.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'totalOrders': totalOrders,
-        'totalRevenue': totalRevenue,
-        'topDoctors': topDoctors.map((e) => e.toMap()).toList(),
-      };
+    'totalOrders': totalOrders,
+    'totalRevenue': totalRevenue,
+    'topDoctors': topDoctors.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -376,9 +379,12 @@ class TopDoctorsReportResponse {
       summary: map['summary'] is Map<String, dynamic>
           ? TopDoctorsSummary.fromMap(map['summary'] as Map<String, dynamic>)
           : const TopDoctorsSummary(),
-      byBranch: (map['byBranch'] as List<dynamic>?)
-              ?.map((e) =>
-                  TopDoctorsBranchReport.fromMap(e as Map<String, dynamic>))
+      byBranch:
+          (map['byBranch'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    TopDoctorsBranchReport.fromMap(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );
@@ -388,11 +394,11 @@ class TopDoctorsReportResponse {
       TopDoctorsReportResponse.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'startDate': startDate,
-        'endDate': endDate,
-        'summary': summary.toMap(),
-        'byBranch': byBranch.map((e) => e.toMap()).toList(),
-      };
+    'startDate': startDate,
+    'endDate': endDate,
+    'summary': summary.toMap(),
+    'byBranch': byBranch.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -433,13 +439,13 @@ class LabTestVolumeItem {
       LabTestVolumeItem.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'labTestId': labTestId,
-        'name': name,
-        'category': category,
-        'isPack': isPack,
-        'timesOrdered': timesOrdered,
-        'totalRevenue': totalRevenue,
-      };
+    'labTestId': labTestId,
+    'name': name,
+    'category': category,
+    'isPack': isPack,
+    'timesOrdered': timesOrdered,
+    'totalRevenue': totalRevenue,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -477,7 +483,8 @@ class LabTestsVolumeBranchReport {
     return LabTestsVolumeBranchReport(
       branchId: map['branchId']?.toString() ?? '',
       branchName: map['branchName']?.toString() ?? '',
-      tests: (map['tests'] as List<dynamic>?)
+      tests:
+          (map['tests'] as List<dynamic>?)
               ?.map((e) => LabTestVolumeItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -488,10 +495,10 @@ class LabTestsVolumeBranchReport {
       LabTestsVolumeBranchReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'branchId': branchId,
-        'branchName': branchName,
-        'tests': tests.map((e) => e.toMap()).toList(),
-      };
+    'branchId': branchId,
+    'branchName': branchName,
+    'tests': tests.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -511,7 +518,8 @@ class LabTestsVolumeSummary {
     return LabTestsVolumeSummary(
       totalTestsCount: (map['totalTestsCount'] as num?)?.toInt() ?? 0,
       totalRevenue: (map['totalRevenue'] as num?)?.toInt() ?? 0,
-      topTests: (map['topTests'] as List<dynamic>?)
+      topTests:
+          (map['topTests'] as List<dynamic>?)
               ?.map((e) => LabTestVolumeItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -522,10 +530,10 @@ class LabTestsVolumeSummary {
       LabTestsVolumeSummary.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'totalTestsCount': totalTestsCount,
-        'totalRevenue': totalRevenue,
-        'topTests': topTests.map((e) => e.toMap()).toList(),
-      };
+    'totalTestsCount': totalTestsCount,
+    'totalRevenue': totalRevenue,
+    'topTests': topTests.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -551,11 +559,17 @@ class LabTestsVolumeReportResponse {
       endDate: (map['endDate'] as num?)?.toInt() ?? 0,
       source: map['source']?.toString() ?? 'orders',
       summary: map['summary'] is Map<String, dynamic>
-          ? LabTestsVolumeSummary.fromMap(map['summary'] as Map<String, dynamic>)
+          ? LabTestsVolumeSummary.fromMap(
+              map['summary'] as Map<String, dynamic>,
+            )
           : const LabTestsVolumeSummary(),
-      byBranch: (map['byBranch'] as List<dynamic>?)
-              ?.map((e) =>
-                  LabTestsVolumeBranchReport.fromMap(e as Map<String, dynamic>))
+      byBranch:
+          (map['byBranch'] as List<dynamic>?)
+              ?.map(
+                (e) => LabTestsVolumeBranchReport.fromMap(
+                  e as Map<String, dynamic>,
+                ),
+              )
               .toList() ??
           const [],
     );
@@ -565,12 +579,12 @@ class LabTestsVolumeReportResponse {
       LabTestsVolumeReportResponse.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'startDate': startDate,
-        'endDate': endDate,
-        'source': source,
-        'summary': summary.toMap(),
-        'byBranch': byBranch.map((e) => e.toMap()).toList(),
-      };
+    'startDate': startDate,
+    'endDate': endDate,
+    'source': source,
+    'summary': summary.toMap(),
+    'byBranch': byBranch.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -620,16 +634,16 @@ class PendingBalanceItem {
       PendingBalanceItem.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'orderId': orderId,
-        'patientId': patientId,
-        'patientName': patientName,
-        'patientPhone': patientPhone,
-        'totalPrice': totalPrice,
-        'paidAmount': paidAmount,
-        'pendingAmount': pendingAmount,
-        'orderDate': orderDate,
-        'daysPending': daysPending,
-      };
+    'orderId': orderId,
+    'patientId': patientId,
+    'patientName': patientName,
+    'patientPhone': patientPhone,
+    'totalPrice': totalPrice,
+    'paidAmount': paidAmount,
+    'pendingAmount': pendingAmount,
+    'orderDate': orderDate,
+    'daysPending': daysPending,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -679,9 +693,11 @@ class PendingBalancesBranchReport {
       branchName: map['branchName']?.toString() ?? '',
       totalPendingAmount: (map['totalPendingAmount'] as num?)?.toInt() ?? 0,
       ordersCount: (map['ordersCount'] as num?)?.toInt() ?? 0,
-      orders: (map['orders'] as List<dynamic>?)
-              ?.map((e) =>
-                  PendingBalanceItem.fromMap(e as Map<String, dynamic>))
+      orders:
+          (map['orders'] as List<dynamic>?)
+              ?.map(
+                (e) => PendingBalanceItem.fromMap(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );
@@ -691,12 +707,12 @@ class PendingBalancesBranchReport {
       PendingBalancesBranchReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'branchId': branchId,
-        'branchName': branchName,
-        'totalPendingAmount': totalPendingAmount,
-        'ordersCount': ordersCount,
-        'orders': orders.map((e) => e.toMap()).toList(),
-      };
+    'branchId': branchId,
+    'branchName': branchName,
+    'totalPendingAmount': totalPendingAmount,
+    'ordersCount': ordersCount,
+    'orders': orders.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -721,9 +737,9 @@ class PendingBalancesSummary {
       PendingBalancesSummary.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'totalPendingAmount': totalPendingAmount,
-        'ordersCount': ordersCount,
-      };
+    'totalPendingAmount': totalPendingAmount,
+    'ordersCount': ordersCount,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -747,11 +763,16 @@ class PendingBalancesReportResponse {
       endDate: (map['endDate'] as num?)?.toInt() ?? 0,
       summary: map['summary'] is Map<String, dynamic>
           ? PendingBalancesSummary.fromMap(
-              map['summary'] as Map<String, dynamic>)
+              map['summary'] as Map<String, dynamic>,
+            )
           : const PendingBalancesSummary(),
-      byBranch: (map['byBranch'] as List<dynamic>?)
-              ?.map((e) =>
-                  PendingBalancesBranchReport.fromMap(e as Map<String, dynamic>))
+      byBranch:
+          (map['byBranch'] as List<dynamic>?)
+              ?.map(
+                (e) => PendingBalancesBranchReport.fromMap(
+                  e as Map<String, dynamic>,
+                ),
+              )
               .toList() ??
           const [],
     );
@@ -761,11 +782,11 @@ class PendingBalancesReportResponse {
       PendingBalancesReportResponse.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'startDate': startDate,
-        'endDate': endDate,
-        'summary': summary.toMap(),
-        'byBranch': byBranch.map((e) => e.toMap()).toList(),
-      };
+    'startDate': startDate,
+    'endDate': endDate,
+    'summary': summary.toMap(),
+    'byBranch': byBranch.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -827,20 +848,20 @@ class ShiftAuditItem {
       ShiftAuditItem.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'shiftId': shiftId,
-        'userId': userId,
-        'userName': userName,
-        'openedAt': openedAt,
-        'closedAt': closedAt,
-        'initialBalance': initialBalance,
-        'cashBalance': cashBalance,
-        'cardBalance': cardBalance,
-        'transferBalance': transferBalance,
-        'totalBalance': totalBalance,
-        'declaredCash': declaredCash,
-        'difference': difference,
-        'notes': notes,
-      };
+    'shiftId': shiftId,
+    'userId': userId,
+    'userName': userName,
+    'openedAt': openedAt,
+    'closedAt': closedAt,
+    'initialBalance': initialBalance,
+    'cashBalance': cashBalance,
+    'cardBalance': cardBalance,
+    'transferBalance': transferBalance,
+    'totalBalance': totalBalance,
+    'declaredCash': declaredCash,
+    'difference': difference,
+    'notes': notes,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 
@@ -901,7 +922,8 @@ class ShiftsAuditBranchReport {
       totalShifts: (map['totalShifts'] as num?)?.toInt() ?? 0,
       totalDiscrepancies: (map['totalDiscrepancies'] as num?)?.toInt() ?? 0,
       netDifference: (map['netDifference'] as num?)?.toInt() ?? 0,
-      shifts: (map['shifts'] as List<dynamic>?)
+      shifts:
+          (map['shifts'] as List<dynamic>?)
               ?.map((e) => ShiftAuditItem.fromMap(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -912,13 +934,13 @@ class ShiftsAuditBranchReport {
       ShiftsAuditBranchReport.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'branchId': branchId,
-        'branchName': branchName,
-        'totalShifts': totalShifts,
-        'totalDiscrepancies': totalDiscrepancies,
-        'netDifference': netDifference,
-        'shifts': shifts.map((e) => e.toMap()).toList(),
-      };
+    'branchId': branchId,
+    'branchName': branchName,
+    'totalShifts': totalShifts,
+    'totalDiscrepancies': totalDiscrepancies,
+    'netDifference': netDifference,
+    'shifts': shifts.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -946,10 +968,10 @@ class ShiftsAuditSummary {
       ShiftsAuditSummary.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'totalShifts': totalShifts,
-        'totalDiscrepancies': totalDiscrepancies,
-        'netDifference': netDifference,
-      };
+    'totalShifts': totalShifts,
+    'totalDiscrepancies': totalDiscrepancies,
+    'netDifference': netDifference,
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }
@@ -974,9 +996,12 @@ class ShiftsAuditReportResponse {
       summary: map['summary'] is Map<String, dynamic>
           ? ShiftsAuditSummary.fromMap(map['summary'] as Map<String, dynamic>)
           : const ShiftsAuditSummary(),
-      byBranch: (map['byBranch'] as List<dynamic>?)
-              ?.map((e) =>
-                  ShiftsAuditBranchReport.fromMap(e as Map<String, dynamic>))
+      byBranch:
+          (map['byBranch'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    ShiftsAuditBranchReport.fromMap(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
     );
@@ -986,11 +1011,11 @@ class ShiftsAuditReportResponse {
       ShiftsAuditReportResponse.fromMap(json);
 
   Map<String, dynamic> toMap() => {
-        'startDate': startDate,
-        'endDate': endDate,
-        'summary': summary.toMap(),
-        'byBranch': byBranch.map((e) => e.toMap()).toList(),
-      };
+    'startDate': startDate,
+    'endDate': endDate,
+    'summary': summary.toMap(),
+    'byBranch': byBranch.map((e) => e.toMap()).toList(),
+  };
 
   Map<String, dynamic> toJson() => toMap();
 }

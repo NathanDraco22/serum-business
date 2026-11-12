@@ -5,10 +5,7 @@ class AuxBioanalyst {
   final UserInfo user;
   final BioanalystInfo bioanalyst;
 
-  AuxBioanalyst({
-    required this.user,
-    required this.bioanalyst,
-  });
+  AuxBioanalyst({required this.user, required this.bioanalyst});
 
   factory AuxBioanalyst.fromJson(Map<String, dynamic> json) {
     return AuxBioanalyst(
@@ -20,16 +17,10 @@ class AuxBioanalyst {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'user': user.toJson(),
-      'bioanalyst': bioanalyst.toJson(),
-    };
+    return {'user': user.toJson(), 'bioanalyst': bioanalyst.toJson()};
   }
 
-  AuxBioanalyst copyWith({
-    UserInfo? user,
-    BioanalystInfo? bioanalyst,
-  }) {
+  AuxBioanalyst copyWith({UserInfo? user, BioanalystInfo? bioanalyst}) {
     return AuxBioanalyst(
       user: user ?? this.user,
       bioanalyst: bioanalyst ?? this.bioanalyst,

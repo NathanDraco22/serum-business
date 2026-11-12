@@ -6,18 +6,14 @@ class LoginRequest {
   final String? phone;
   final String password;
 
-  LoginRequest({
-    this.username,
-    this.email,
-    this.phone,
-    required this.password,
-  });
+  LoginRequest({this.username, this.email, this.phone, required this.password});
 
   factory LoginRequest.fromInput(String input, String password) {
     final trimmed = input.trim();
     if (trimmed.contains('@')) {
       return LoginRequest(email: trimmed, password: password);
-    } else if (RegExp(r'^\+?[0-9\s\-]+$').hasMatch(trimmed) && trimmed.length >= 7) {
+    } else if (RegExp(r'^\+?[0-9\s\-]+$').hasMatch(trimmed) &&
+        trimmed.length >= 7) {
       return LoginRequest(phone: trimmed, password: password);
     } else {
       return LoginRequest(username: trimmed, password: password);
@@ -60,9 +56,7 @@ class RefreshTokenRequest {
   RefreshTokenRequest({required this.refreshToken});
 
   Map<String, dynamic> toJson() {
-    return {
-      'refreshToken': refreshToken,
-    };
+    return {'refreshToken': refreshToken};
   }
 }
 
@@ -70,10 +64,7 @@ class RefreshTokenResponse {
   final String token;
   final String refreshToken;
 
-  RefreshTokenResponse({
-    required this.token,
-    required this.refreshToken,
-  });
+  RefreshTokenResponse({required this.token, required this.refreshToken});
 
   factory RefreshTokenResponse.fromJson(Map<String, dynamic> json) {
     return RefreshTokenResponse(
@@ -89,9 +80,7 @@ class CheckUserRequest {
   CheckUserRequest({required this.token});
 
   Map<String, dynamic> toJson() {
-    return {
-      'token': token,
-    };
+    return {'token': token};
   }
 }
 
@@ -105,8 +94,6 @@ class CheckUserResponse {
   bool get isDeleted => status == 'deleted';
 
   factory CheckUserResponse.fromJson(Map<String, dynamic> json) {
-    return CheckUserResponse(
-      status: json['status'] as String,
-    );
+    return CheckUserResponse(status: json['status'] as String);
   }
 }

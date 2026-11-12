@@ -4,15 +4,21 @@ import 'package:serum_business/src/tools/http_tool.dart';
 
 class CashTransactionsDataSource with HttpService {
   CashTransactionsDataSource._();
-  static final CashTransactionsDataSource instance = CashTransactionsDataSource._();
+  static final CashTransactionsDataSource instance =
+      CashTransactionsDataSource._();
   factory CashTransactionsDataSource() {
     return instance;
   }
 
   final _endpoint = "/cash-transactions";
 
-  Future<Map<String, dynamic>> getAllCashTransactions({CashTransactionQueryParams? queryParams}) async {
-    final uri = HttpTools.generateUri(_endpoint, queryParameters: queryParams?.toQueryParameters());
+  Future<Map<String, dynamic>> getAllCashTransactions({
+    CashTransactionQueryParams? queryParams,
+  }) async {
+    final uri = HttpTools.generateUri(
+      _endpoint,
+      queryParameters: queryParams?.toQueryParameters(),
+    );
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
     return res;

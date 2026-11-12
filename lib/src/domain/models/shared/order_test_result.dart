@@ -1,3 +1,4 @@
+import 'package:serum_business/src/domain/models/shared/clinical_alert_evaluator.dart';
 import 'package:serum_business/src/domain/models/shared/included_test.dart';
 import 'package:serum_business/src/domain/models/shared/reference_value.dart';
 
@@ -26,16 +27,19 @@ class OrderTestResult extends IncludedTest {
   factory OrderTestResult.fromJson(Map<String, dynamic> json) {
     return OrderTestResult(
       labTestId: json['labTestId'] as String? ?? '',
-      parameterName: json['parameterName'] as String? ?? json['testName'] as String? ?? '',
+      parameterName:
+          json['parameterName'] as String? ?? json['testName'] as String? ?? '',
       medicalClassification: json['medicalClassification'] as String? ?? '',
       subclassification: json['subclassification'] as String? ?? '',
       dataType: json['dataType'] as String? ?? 'numeric',
       unitOfMeasure: json['unitOfMeasure'] as String? ?? '',
-      referenceValues: (json['referenceValues'] as List<dynamic>?)
+      referenceValues:
+          (json['referenceValues'] as List<dynamic>?)
               ?.map((e) => ReferenceValue.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      qualitativeOptions: (json['qualitativeOptions'] as List<dynamic>?)
+      qualitativeOptions:
+          (json['qualitativeOptions'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
@@ -43,7 +47,9 @@ class OrderTestResult extends IncludedTest {
       referenceText: json['referenceText'] as String? ?? '',
       parentExamName: json['parentExamName'] as String?,
       resultValue: json['resultValue'] as String?,
-      alertFlag: json['alertFlag'] as String?,
+      alertFlag: ClinicalAlertEvaluator.normalizeFlag(
+        json['alertFlag'] as String?,
+      ),
       showInPrint: json['showInPrint'] as bool? ?? true,
     );
   }
@@ -77,13 +83,15 @@ class OrderTestResult extends IncludedTest {
     return OrderTestResult(
       labTestId: labTestId ?? this.labTestId,
       parameterName: parameterName ?? this.parameterName,
-      medicalClassification: medicalClassification ?? this.medicalClassification,
+      medicalClassification:
+          medicalClassification ?? this.medicalClassification,
       subclassification: subclassification ?? this.subclassification,
       dataType: dataType ?? this.dataType,
       unitOfMeasure: unitOfMeasure ?? this.unitOfMeasure,
       referenceValues: referenceValues ?? this.referenceValues,
       qualitativeOptions: qualitativeOptions ?? this.qualitativeOptions,
-      expectedQualitativeValue: expectedQualitativeValue ?? this.expectedQualitativeValue,
+      expectedQualitativeValue:
+          expectedQualitativeValue ?? this.expectedQualitativeValue,
       referenceText: referenceText ?? this.referenceText,
       parentExamName: parentExamName ?? this.parentExamName,
       resultValue: resultValue ?? this.resultValue,

@@ -42,16 +42,10 @@ class CloseCashShift {
   final int declaredCash;
   final String notes;
 
-  CloseCashShift({
-    required this.declaredCash,
-    this.notes = '',
-  });
+  CloseCashShift({required this.declaredCash, this.notes = ''});
 
   Map<String, dynamic> toJson() {
-    return {
-      'declaredCash': declaredCash,
-      'notes': notes,
-    };
+    return {'declaredCash': declaredCash, 'notes': notes};
   }
 }
 
@@ -61,9 +55,7 @@ class UpdateCashShift {
   UpdateCashShift({this.notes});
 
   Map<String, dynamic> toJson() {
-    return {
-      if (notes != null) 'notes': notes,
-    };
+    return {if (notes != null) 'notes': notes};
   }
 }
 

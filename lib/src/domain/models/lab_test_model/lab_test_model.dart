@@ -205,16 +205,16 @@ class LabTestInDb extends BaseLabTest {
   factory LabTestInDb.fromJson(Map<String, dynamic> json) {
     final rawName =
         json['name'] as String? ?? json['parameterName'] as String? ?? '';
-    final rawCategory = json['commercialCategory'] as String? ??
+    final rawCategory =
+        json['commercialCategory'] as String? ??
         json['medicalClassification'] as String? ??
         '';
     final rawSubclassification = json['subclassification'] as String? ?? '';
     final rawCommercial = json['commercial'] != null
         ? LabTestCommercial.fromJson(json['commercial'] as Map<String, dynamic>)
         : null;
-    final parsedCost = (json['costPrice'] as num?)?.toInt() ??
-        rawCommercial?.costPrice ??
-        0;
+    final parsedCost =
+        (json['costPrice'] as num?)?.toInt() ?? rawCommercial?.costPrice ?? 0;
 
     return LabTestInDb(
       id: json['id'] as String,
@@ -222,29 +222,30 @@ class LabTestInDb extends BaseLabTest {
       code: json['code'] as String?,
       commercialCategory: rawCategory,
       subclassification: rawSubclassification,
-      salePrice: (json['salePrice'] as num?)?.toInt() ??
-          rawCommercial?.salePrice ??
-          0,
-      salePrice2: (json['salePrice2'] as num?)?.toInt() ??
+      salePrice:
+          (json['salePrice'] as num?)?.toInt() ?? rawCommercial?.salePrice ?? 0,
+      salePrice2:
+          (json['salePrice2'] as num?)?.toInt() ??
           rawCommercial?.salePrice2 ??
           0,
       costPrice: parsedCost,
-      currency: json['currency'] as String? ??
-          rawCommercial?.currency ??
-          'USD',
+      currency: json['currency'] as String? ?? rawCommercial?.currency ?? 'USD',
       isPack: json['isPack'] as bool? ?? false,
       useChildTestsPriceSum: json['useChildTestsPriceSum'] as bool? ?? true,
-      childTestIds: (json['childTestIds'] as List<dynamic>?)
+      childTestIds:
+          (json['childTestIds'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],
       dataType: json['dataType'] as String? ?? 'numeric',
       unitOfMeasure: json['unitOfMeasure'] as String? ?? '',
-      referenceValues: (json['referenceValues'] as List<dynamic>?)
+      referenceValues:
+          (json['referenceValues'] as List<dynamic>?)
               ?.map((e) => ReferenceValue.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      qualitativeOptions: (json['qualitativeOptions'] as List<dynamic>?)
+      qualitativeOptions:
+          (json['qualitativeOptions'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],

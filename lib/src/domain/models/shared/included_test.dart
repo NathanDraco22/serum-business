@@ -30,16 +30,19 @@ class IncludedTest {
   factory IncludedTest.fromJson(Map<String, dynamic> json) {
     return IncludedTest(
       labTestId: json['labTestId'] as String? ?? '',
-      parameterName: json['parameterName'] as String? ?? json['testName'] as String? ?? '',
+      parameterName:
+          json['parameterName'] as String? ?? json['testName'] as String? ?? '',
       medicalClassification: json['medicalClassification'] as String? ?? '',
       subclassification: json['subclassification'] as String? ?? '',
       dataType: json['dataType'] as String? ?? 'numeric',
       unitOfMeasure: json['unitOfMeasure'] as String? ?? '',
-      referenceValues: (json['referenceValues'] as List<dynamic>?)
+      referenceValues:
+          (json['referenceValues'] as List<dynamic>?)
               ?.map((e) => ReferenceValue.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      qualitativeOptions: (json['qualitativeOptions'] as List<dynamic>?)
+      qualitativeOptions:
+          (json['qualitativeOptions'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],

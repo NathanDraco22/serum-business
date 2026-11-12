@@ -33,10 +33,12 @@ class ImportsRepository {
   Future<UpdateImportResult> updateCatalog({
     bool overridePrice = false,
     bool updateLabTest = true,
+    bool preserveReferenceValues = true,
   }) async {
     final result = await importsDataSource.updateCatalog(
       overridePrice: overridePrice,
       updateLabTest: updateLabTest,
+      preserveReferenceValues: preserveReferenceValues,
     );
     final model = UpdateImportResult.fromJson(result);
     _lastUpdateResult = model;

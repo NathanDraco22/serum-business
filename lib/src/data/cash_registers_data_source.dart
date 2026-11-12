@@ -10,7 +10,9 @@ class CashRegistersDataSource with HttpService {
 
   final _endpoint = "/cash-registers";
 
-  Future<Map<String, dynamic>> createCashRegister(Map<String, dynamic> cashRegister) async {
+  Future<Map<String, dynamic>> createCashRegister(
+    Map<String, dynamic> cashRegister,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, cashRegister, headers: headers);
@@ -24,7 +26,9 @@ class CashRegistersDataSource with HttpService {
     return res;
   }
 
-  Future<Map<String, dynamic>?> getCashRegisterById(String cashRegisterId) async {
+  Future<Map<String, dynamic>?> getCashRegisterById(
+    String cashRegisterId,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/$cashRegisterId");
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
@@ -41,7 +45,9 @@ class CashRegistersDataSource with HttpService {
     return res;
   }
 
-  Future<Map<String, dynamic>?> deleteCashRegisterById(String cashRegisterId) async {
+  Future<Map<String, dynamic>?> deleteCashRegisterById(
+    String cashRegisterId,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/$cashRegisterId");
     final headers = HttpTools.generateAuthHeaders();
     final res = await deleteQuery(uri, headers: headers);

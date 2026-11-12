@@ -20,7 +20,9 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
   }
 
   Future<List<OrderInDb>> getAllOrders({OrderQueryParams? queryParams}) async {
-    final results = await ordersDataSource.getAllOrders(queryParams: queryParams);
+    final results = await ordersDataSource.getAllOrders(
+      queryParams: queryParams,
+    );
     final response = ListResponse<OrderInDb>.fromJson(
       results,
       OrderInDb.fromJson,
@@ -53,10 +55,7 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
     return OrderInDb.fromJson(result);
   }
 
-  Future<OrderInDb?> updateOrderById(
-    String orderId,
-    UpdateOrder order,
-  ) async {
+  Future<OrderInDb?> updateOrderById(String orderId, UpdateOrder order) async {
     final result = await ordersDataSource.updateOrderById(
       orderId,
       order.toJson(),
@@ -72,8 +71,11 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
     return updatedOrder;
   }
 
-  Future<OrderInDb?> deleteOrderById(String orderId) async {
-    final result = await ordersDataSource.deleteOrderById(orderId);
+  Future<OrderInDb?> deleteOrderById(String orderId, {String? reason}) async {
+    final result = await ordersDataSource.deleteOrderById(
+      orderId,
+      reason: reason,
+    );
     if (result == null) return null;
 
     final deletedOrder = OrderInDb.fromJson(result);
@@ -83,7 +85,10 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
   }
 
   Future<OrderInDb> payOrder(String orderId, OrderPayRequest payRequest) async {
-    final result = await ordersDataSource.payOrder(orderId, payRequest.toJson());
+    final result = await ordersDataSource.payOrder(
+      orderId,
+      payRequest.toJson(),
+    );
     final paidOrder = OrderInDb.fromJson(result);
     final index = _orders.indexWhere((o) => o.id == orderId);
     if (index != -1) {
@@ -97,7 +102,10 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
     String orderId,
     OrderApproveRequest approveRequest,
   ) async {
-    final result = await ordersDataSource.approveOrder(orderId, approveRequest.toJson());
+    final result = await ordersDataSource.approveOrder(
+      orderId,
+      approveRequest.toJson(),
+    );
     final approvedOrder = OrderInDb.fromJson(result);
     final index = _orders.indexWhere((o) => o.id == orderId);
     if (index != -1) {
@@ -105,5 +113,33 @@ class OrdersRepository with ReactiveRepository<OrderInDb> {
       notifyItemUpdated(approvedOrder);
     }
     return approvedOrder;
+  }
+
+  Future<OrderInDb> finalizeOrder(String orderId) async {
+    final result = await ordersDataSource.finalizeOrder(orderId);
+    final finalizedOrder = OrderInDb.fromJson(result);
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      _orders[index] = finalizedOrder;
+      notifyItemUpdated(finalizedOrder);
+    }
+    return finalizedOrder;
+  }
+
+  Future<OrderInDb> reopenOrder(
+    String orderId,
+    OrderReopenRequest reopenRequest,
+  ) async {
+    final result = await ordersDataSource.reopenOrder(
+      orderId,
+      reopenRequest.toJson(),
+    );
+    final reopenedOrder = OrderInDb.fromJson(result);
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      _orders[index] = reopenedOrder;
+      notifyItemUpdated(reopenedOrder);
+    }
+    return reopenedOrder;
   }
 }

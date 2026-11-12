@@ -11,7 +11,9 @@ class PatientsRepository with ReactiveRepository<PatientInDb> {
   List<PatientInDb> _patients = [];
 
   Future<PatientInDb> createPatient(CreatePatient createPatient) async {
-    final result = await patientsDataSource.createPatient(createPatient.toJson());
+    final result = await patientsDataSource.createPatient(
+      createPatient.toJson(),
+    );
     final newPatient = PatientInDb.fromJson(result);
     _patients = [newPatient, ..._patients];
     notifyItemCreated(newPatient);
@@ -19,7 +21,9 @@ class PatientsRepository with ReactiveRepository<PatientInDb> {
   }
 
   Future<List<PatientInDb>> getAllPatients({String? originBranch}) async {
-    final results = await patientsDataSource.getAllPatients(originBranch: originBranch);
+    final results = await patientsDataSource.getAllPatients(
+      originBranch: originBranch,
+    );
     final response = ListResponse<PatientInDb>.fromJson(
       results,
       PatientInDb.fromJson,

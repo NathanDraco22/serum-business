@@ -7,7 +7,10 @@ import 'package:http_parser/http_parser.dart';
 import 'exceptions/http_exceptions.dart';
 
 mixin HttpService {
-  Future<Map<String, dynamic>> getQuery(Uri url, {Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> getQuery(
+    Uri url, {
+    Map<String, String>? headers,
+  }) async {
     late http.Response response;
 
     try {
@@ -24,7 +27,11 @@ mixin HttpService {
     return body;
   }
 
-  Future<Map<String, dynamic>> postQuery(Uri url, Map<String, dynamic> body, {Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> postQuery(
+    Uri url,
+    Map<String, dynamic> body, {
+    Map<String, String>? headers,
+  }) async {
     final jsonEncoded = jsonEncode(body);
     final contentType = {'Content-Type': 'application/json'};
 
@@ -33,7 +40,11 @@ mixin HttpService {
     late http.Response response;
 
     try {
-      response = await http.post(url, body: jsonEncoded, headers: applicationHeaders);
+      response = await http.post(
+        url,
+        body: jsonEncoded,
+        headers: applicationHeaders,
+      );
     } catch (error) {
       throw NoInternetException({"message": error.toString()});
     }
@@ -46,7 +57,11 @@ mixin HttpService {
     return decodedBody;
   }
 
-  Future<Map<String, dynamic>> putQuery(Uri url, Map<String, dynamic> body, {Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> putQuery(
+    Uri url,
+    Map<String, dynamic> body, {
+    Map<String, String>? headers,
+  }) async {
     final jsonEncoded = jsonEncode(body);
     final contentType = {'Content-Type': 'application/json'};
 
@@ -55,7 +70,11 @@ mixin HttpService {
     late http.Response response;
 
     try {
-      response = await http.put(url, body: jsonEncoded, headers: applicationHeaders);
+      response = await http.put(
+        url,
+        body: jsonEncoded,
+        headers: applicationHeaders,
+      );
     } catch (error) {
       throw NoInternetException({"message": error.toString()});
     }
@@ -68,7 +87,11 @@ mixin HttpService {
     return decodedBody;
   }
 
-  Future<Map<String, dynamic>> patchQuery(Uri url, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> patchQuery(
+    Uri url, {
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+  }) async {
     String? jsonEncoded;
     if (body != null) jsonEncoded = jsonEncode(body);
 
@@ -78,7 +101,11 @@ mixin HttpService {
     late http.Response response;
 
     try {
-      response = await http.patch(url, body: jsonEncoded, headers: applicationHeaders);
+      response = await http.patch(
+        url,
+        body: jsonEncoded,
+        headers: applicationHeaders,
+      );
     } catch (error) {
       throw NoInternetException({"message": error.toString()});
     }
@@ -91,7 +118,10 @@ mixin HttpService {
     return decodedBody;
   }
 
-  Future<Map<String, dynamic>> deleteQuery(Uri url, {Map<String, String>? headers}) async {
+  Future<Map<String, dynamic>> deleteQuery(
+    Uri url, {
+    Map<String, String>? headers,
+  }) async {
     late http.Response response;
 
     try {
@@ -123,7 +153,12 @@ mixin HttpService {
     }
 
     request.files.add(
-      http.MultipartFile.fromBytes(fieldName, bytes, filename: fileName, contentType: MediaType.parse(mediaType)),
+      http.MultipartFile.fromBytes(
+        fieldName,
+        bytes,
+        filename: fileName,
+        contentType: MediaType.parse(mediaType),
+      ),
     );
 
     late http.Response response;

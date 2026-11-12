@@ -137,7 +137,8 @@ class UserInDb extends BaseUser {
       phone: json['phone'] as String?,
       role: role,
       accessLevel: json['accessLevel'] as int? ?? fallbackAccessLevel,
-      branches: (json['branches'] as List<dynamic>?)
+      branches:
+          (json['branches'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],

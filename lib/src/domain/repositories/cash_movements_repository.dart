@@ -12,19 +12,23 @@ class CashMovementsRepository with ReactiveRepository<CashMovementInDb> {
   List<CashMovementInDb> _cashMovements = [];
 
   Future<CashMovementInDb> createCashMovement(
-      CreateCashMovement createCashMovement) async {
-    final result = await cashMovementsDataSource
-        .createCashMovement(createCashMovement.toJson());
+    CreateCashMovement createCashMovement,
+  ) async {
+    final result = await cashMovementsDataSource.createCashMovement(
+      createCashMovement.toJson(),
+    );
     final newMovement = CashMovementInDb.fromJson(result);
     _cashMovements = [newMovement, ..._cashMovements];
     notifyItemCreated(newMovement);
     return newMovement;
   }
 
-  Future<List<CashMovementInDb>> getAllCashMovements(
-      {CashMovementQueryParams? queryParams}) async {
+  Future<List<CashMovementInDb>> getAllCashMovements({
+    CashMovementQueryParams? queryParams,
+  }) async {
     final results = await cashMovementsDataSource.getAllCashMovements(
-        queryParams: queryParams);
+      queryParams: queryParams,
+    );
     final response = ListResponse<CashMovementInDb>.fromJson(
       results,
       CashMovementInDb.fromJson,
@@ -35,8 +39,9 @@ class CashMovementsRepository with ReactiveRepository<CashMovementInDb> {
   }
 
   Future<CashMovementInDb?> getCashMovementById(String cashMovementId) async {
-    final result =
-        await cashMovementsDataSource.getCashMovementById(cashMovementId);
+    final result = await cashMovementsDataSource.getCashMovementById(
+      cashMovementId,
+    );
     if (result == null) return null;
     return CashMovementInDb.fromJson(result);
   }
@@ -61,9 +66,11 @@ class CashMovementsRepository with ReactiveRepository<CashMovementInDb> {
   }
 
   Future<CashMovementInDb?> deleteCashMovementById(
-      String cashMovementId) async {
-    final result =
-        await cashMovementsDataSource.deleteCashMovementById(cashMovementId);
+    String cashMovementId,
+  ) async {
+    final result = await cashMovementsDataSource.deleteCashMovementById(
+      cashMovementId,
+    );
     if (result == null) return null;
 
     final deletedMovement = CashMovementInDb.fromJson(result);

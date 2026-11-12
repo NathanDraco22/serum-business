@@ -75,7 +75,8 @@ class LabTestAccountInDb extends BaseLabTestAccount {
       labTestId: json['labTestId'] as String,
       commercial: json['commercial'] != null
           ? LabTestCommercial.fromJson(
-              json['commercial'] as Map<String, dynamic>)
+              json['commercial'] as Map<String, dynamic>,
+            )
           : LabTestCommercial(),
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,

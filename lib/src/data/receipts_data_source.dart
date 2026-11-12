@@ -11,14 +11,18 @@ class ReceiptsDataSource with HttpService {
 
   final _endpoint = "/receipts";
 
-  Future<Map<String, dynamic>> createReceipt(Map<String, dynamic> receipt) async {
+  Future<Map<String, dynamic>> createReceipt(
+    Map<String, dynamic> receipt,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, receipt, headers: headers);
     return res;
   }
 
-  Future<Map<String, dynamic>> getAllReceipts({ReceiptQueryParams? queryParams}) async {
+  Future<Map<String, dynamic>> getAllReceipts({
+    ReceiptQueryParams? queryParams,
+  }) async {
     final uri = HttpTools.generateUri(
       _endpoint,
       queryParameters: queryParams?.toQueryParameters(),

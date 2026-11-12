@@ -11,15 +11,22 @@ class QuotationsDataSource with HttpService {
 
   final _endpoint = "/quotations";
 
-  Future<Map<String, dynamic>> createQuotation(Map<String, dynamic> quotation) async {
+  Future<Map<String, dynamic>> createQuotation(
+    Map<String, dynamic> quotation,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, quotation, headers: headers);
     return res;
   }
 
-  Future<Map<String, dynamic>> getAllQuotations({QuotationQueryParams? queryParams}) async {
-    final uri = HttpTools.generateUri(_endpoint, queryParameters: queryParams?.toQueryParameters());
+  Future<Map<String, dynamic>> getAllQuotations({
+    QuotationQueryParams? queryParams,
+  }) async {
+    final uri = HttpTools.generateUri(
+      _endpoint,
+      queryParameters: queryParams?.toQueryParameters(),
+    );
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
     return res;

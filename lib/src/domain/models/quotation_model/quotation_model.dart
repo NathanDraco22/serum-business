@@ -126,7 +126,8 @@ class QuotationInDb extends BaseQuotation {
   });
 
   factory QuotationInDb.fromJson(Map<String, dynamic> json) {
-    final rawItems = json['items'] as List<dynamic>? ?? json['exams'] as List<dynamic>?;
+    final rawItems =
+        json['items'] as List<dynamic>? ?? json['exams'] as List<dynamic>?;
     return QuotationInDb(
       id: json['id'] as String,
       clientName: json['clientName'] as String? ?? 'Cliente General',
@@ -139,7 +140,8 @@ class QuotationInDb extends BaseQuotation {
       doctorInfo: json['doctorInfo'] != null
           ? DoctorInfo.fromJson(json['doctorInfo'] as Map<String, dynamic>)
           : null,
-      exams: rawItems
+      exams:
+          rawItems
               ?.map((e) => QuotedExam.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],

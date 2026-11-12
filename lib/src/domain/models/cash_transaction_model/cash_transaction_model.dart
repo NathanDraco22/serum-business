@@ -111,8 +111,9 @@ class CashTransactionInDb extends BaseCashTransaction {
       resultingBalance: json['resultingBalance'] as int,
       concept: json['concept'] as String,
       referenceId: json['referenceId'] as String?,
-      performedBy:
-          UserInfo.fromJson(json['performedBy'] as Map<String, dynamic>),
+      performedBy: UserInfo.fromJson(
+        json['performedBy'] as Map<String, dynamic>,
+      ),
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
       isDeleted: json['isDeleted'] as bool? ?? false,

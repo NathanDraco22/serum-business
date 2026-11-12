@@ -7,6 +7,7 @@ class UpdateImportResult {
   final int updatedAccountsCount;
   final int createdAccountsCount;
   final int skippedPricesCount;
+  final int preservedReferenceValuesCount;
 
   const UpdateImportResult({
     this.success = true,
@@ -17,6 +18,7 @@ class UpdateImportResult {
     this.updatedAccountsCount = 0,
     this.createdAccountsCount = 0,
     this.skippedPricesCount = 0,
+    this.preservedReferenceValuesCount = 0,
   });
 
   factory UpdateImportResult.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,8 @@ class UpdateImportResult {
       updatedAccountsCount: json['updatedAccountsCount'] as int? ?? 0,
       createdAccountsCount: json['createdAccountsCount'] as int? ?? 0,
       skippedPricesCount: json['skippedPricesCount'] as int? ?? 0,
+      preservedReferenceValuesCount:
+          json['preservedReferenceValuesCount'] as int? ?? 0,
     );
   }
 
@@ -42,11 +46,12 @@ class UpdateImportResult {
       'updatedAccountsCount': updatedAccountsCount,
       'createdAccountsCount': createdAccountsCount,
       'skippedPricesCount': skippedPricesCount,
+      'preservedReferenceValuesCount': preservedReferenceValuesCount,
     };
   }
 
   @override
   String toString() {
-    return 'UpdateImportResult(success: $success, message: $message, totalProcessed: $totalProcessed, updatedTestsCount: $updatedTestsCount, createdTestsCount: $createdTestsCount, updatedAccountsCount: $updatedAccountsCount, createdAccountsCount: $createdAccountsCount, skippedPricesCount: $skippedPricesCount)';
+    return 'UpdateImportResult(success: $success, message: $message, totalProcessed: $totalProcessed, updatedTestsCount: $updatedTestsCount, createdTestsCount: $createdTestsCount, updatedAccountsCount: $updatedAccountsCount, createdAccountsCount: $createdAccountsCount, skippedPricesCount: $skippedPricesCount, preservedReferenceValuesCount: $preservedReferenceValuesCount)';
   }
 }

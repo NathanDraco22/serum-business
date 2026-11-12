@@ -27,8 +27,9 @@ class LabTestAccountsDataSource with HttpService {
     String branchId,
     String labTestId,
   ) async {
-    final uri =
-        HttpTools.generateUri("$_endpoint/branch/$branchId/test/$labTestId");
+    final uri = HttpTools.generateUri(
+      "$_endpoint/branch/$branchId/test/$labTestId",
+    );
     final headers = HttpTools.generateAuthHeaders();
     return await getQuery(uri, headers: headers);
   }
@@ -48,7 +49,8 @@ class LabTestAccountsDataSource with HttpService {
     Map<String, dynamic> commercial,
   ) async {
     final uri = HttpTools.generateUri(
-        "$_endpoint/branch/$branchId/test/$labTestId/commercial");
+      "$_endpoint/branch/$branchId/test/$labTestId/commercial",
+    );
     final headers = HttpTools.generateAuthHeaders();
     return await patchQuery(uri, body: commercial, headers: headers);
   }

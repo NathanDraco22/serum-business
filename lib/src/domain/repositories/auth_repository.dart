@@ -12,10 +12,7 @@ class AuthRepository {
 
   Completer<RefreshTokenResponse?>? _refreshCompleter;
 
-  AuthRepository({
-    required this.dataSource,
-    required this.tokenStorage,
-  });
+  AuthRepository({required this.dataSource, required this.tokenStorage});
 
   Future<LoginResponse> login({
     required String identifier,

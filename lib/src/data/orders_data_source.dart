@@ -18,8 +18,13 @@ class OrdersDataSource with HttpService {
     return res;
   }
 
-  Future<Map<String, dynamic>> getAllOrders({OrderQueryParams? queryParams}) async {
-    final uri = HttpTools.generateUri(_endpoint, queryParameters: queryParams?.toQueryParameters());
+  Future<Map<String, dynamic>> getAllOrders({
+    OrderQueryParams? queryParams,
+  }) async {
+    final uri = HttpTools.generateUri(
+      _endpoint,
+      queryParameters: queryParams?.toQueryParameters(),
+    );
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
     return res;
@@ -60,8 +65,16 @@ class OrdersDataSource with HttpService {
     return res;
   }
 
-  Future<Map<String, dynamic>?> deleteOrderById(String orderId) async {
-    final uri = HttpTools.generateUri("$_endpoint/$orderId");
+  Future<Map<String, dynamic>?> deleteOrderById(
+    String orderId, {
+    String? reason,
+  }) async {
+    final uri = HttpTools.generateUri(
+      "$_endpoint/$orderId",
+      queryParameters: (reason != null && reason.trim().isNotEmpty)
+          ? {'reason': reason.trim()}
+          : null,
+    );
     final headers = HttpTools.generateAuthHeaders();
     final res = await deleteQuery(uri, headers: headers);
     return res;
@@ -82,6 +95,23 @@ class OrdersDataSource with HttpService {
     Map<String, dynamic> body,
   ) async {
     final uri = HttpTools.generateUri("$_endpoint/$orderId/approve");
+    final headers = HttpTools.generateAuthHeaders();
+    final res = await postQuery(uri, body, headers: headers);
+    return res;
+  }
+
+  Future<Map<String, dynamic>> finalizeOrder(String orderId) async {
+    final uri = HttpTools.generateUri("$_endpoint/$orderId/finalize");
+    final headers = HttpTools.generateAuthHeaders();
+    final res = await postQuery(uri, const {}, headers: headers);
+    return res;
+  }
+
+  Future<Map<String, dynamic>> reopenOrder(
+    String orderId,
+    Map<String, dynamic> body,
+  ) async {
+    final uri = HttpTools.generateUri("$_endpoint/$orderId/reopen");
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, body, headers: headers);
     return res;

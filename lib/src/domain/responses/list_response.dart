@@ -8,7 +8,8 @@ class ListResponse<T> {
     Map<String, dynamic> json,
     T Function(Map<String, dynamic>) fromJsonT,
   ) {
-    final items = (json['data'] as List<dynamic>?)
+    final items =
+        (json['data'] as List<dynamic>?)
             ?.map((item) => fromJsonT(item as Map<String, dynamic>))
             .toList() ??
         [];

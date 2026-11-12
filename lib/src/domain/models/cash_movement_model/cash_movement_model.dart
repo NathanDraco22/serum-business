@@ -63,14 +63,10 @@ class CreateCashMovement {
 class UpdateCashMovement {
   final String? concept;
 
-  UpdateCashMovement({
-    this.concept,
-  });
+  UpdateCashMovement({this.concept});
 
   Map<String, dynamic> toJson() {
-    return {
-      if (concept != null) 'concept': concept,
-    };
+    return {if (concept != null) 'concept': concept};
   }
 }
 

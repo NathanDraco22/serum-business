@@ -36,7 +36,8 @@ class ApiKeyModel {
       key: json['key'] ?? '',
       maskedKey: json['maskedKey'] ?? json['key'] ?? '',
       serviceType: json['serviceType'] ?? 'power_bi',
-      scopes: (json['scopes'] as List<dynamic>?)
+      scopes:
+          (json['scopes'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           ['bi:read'],

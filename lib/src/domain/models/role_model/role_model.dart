@@ -3,19 +3,11 @@ class BaseRole {
   final int accessLevel;
   final String? description;
 
-  BaseRole({
-    required this.name,
-    this.accessLevel = 3,
-    this.description,
-  });
+  BaseRole({required this.name, this.accessLevel = 3, this.description});
 }
 
 class CreateRole extends BaseRole {
-  CreateRole({
-    required super.name,
-    super.accessLevel = 3,
-    super.description,
-  });
+  CreateRole({required super.name, super.accessLevel = 3, super.description});
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,11 +23,7 @@ class UpdateRole {
   final int? accessLevel;
   final String? description;
 
-  UpdateRole({
-    this.name,
-    this.accessLevel,
-    this.description,
-  });
+  UpdateRole({this.name, this.accessLevel, this.description});
 
   Map<String, dynamic> toJson() {
     return {

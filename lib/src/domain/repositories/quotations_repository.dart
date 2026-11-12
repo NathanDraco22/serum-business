@@ -12,15 +12,21 @@ class QuotationsRepository with ReactiveRepository<QuotationInDb> {
   List<QuotationInDb> _quotations = [];
 
   Future<QuotationInDb> createQuotation(CreateQuotation createQuotation) async {
-    final result = await quotationsDataSource.createQuotation(createQuotation.toJson());
+    final result = await quotationsDataSource.createQuotation(
+      createQuotation.toJson(),
+    );
     final newQuotation = QuotationInDb.fromJson(result);
     _quotations = [newQuotation, ..._quotations];
     notifyItemCreated(newQuotation);
     return newQuotation;
   }
 
-  Future<List<QuotationInDb>> getAllQuotations({QuotationQueryParams? queryParams}) async {
-    final results = await quotationsDataSource.getAllQuotations(queryParams: queryParams);
+  Future<List<QuotationInDb>> getAllQuotations({
+    QuotationQueryParams? queryParams,
+  }) async {
+    final results = await quotationsDataSource.getAllQuotations(
+      queryParams: queryParams,
+    );
     final response = ListResponse<QuotationInDb>.fromJson(
       results,
       QuotationInDb.fromJson,

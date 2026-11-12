@@ -10,7 +10,9 @@ class LabTestsDataSource with HttpService {
 
   final _endpoint = "/lab-tests";
 
-  Future<Map<String, dynamic>> createLabTest(Map<String, dynamic> labTest) async {
+  Future<Map<String, dynamic>> createLabTest(
+    Map<String, dynamic> labTest,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, labTest, headers: headers);

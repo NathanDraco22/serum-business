@@ -18,7 +18,8 @@ class QuotedExam {
 
   factory QuotedExam.fromJson(Map<String, dynamic> json) {
     return QuotedExam(
-      labTestId: json['labTestId'] as String? ?? json['examId'] as String? ?? '',
+      labTestId:
+          json['labTestId'] as String? ?? json['examId'] as String? ?? '',
       name: json['name'] as String? ?? json['examName'] as String? ?? '',
       quotedPrice: (json['quotedPrice'] as num?)?.toInt() ?? 0,
       isPack: json['isPack'] as bool? ?? false,

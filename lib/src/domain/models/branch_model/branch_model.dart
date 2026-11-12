@@ -7,6 +7,7 @@ export '../shared/bioanalyst_info.dart';
 class BaseBranch {
   final String name;
   final String address;
+  final String city;
   final String phone;
   final String? email;
   final String? facebook;
@@ -15,10 +16,12 @@ class BaseBranch {
   final String? isoLogoUrl;
   final BioanalystInfo? bioanalyst;
   final List<AuxBioanalyst>? auxBio;
+  final bool autoCalculateFormulas;
 
   BaseBranch({
     required this.name,
     required this.address,
+    this.city = '',
     required this.phone,
     this.email,
     this.facebook,
@@ -27,27 +30,38 @@ class BaseBranch {
     this.isoLogoUrl,
     this.bioanalyst,
     this.auxBio,
+    this.autoCalculateFormulas = true,
   });
+
+  /// Nombre de presentación de la sede con su ciudad/localidad integrada.
+  /// Ej: "Sucursal Central - Matagalpa". Si la ciudad está vacía o ya forma
+  /// parte del nombre, retorna únicamente el nombre.
+  String get displayName {
+    final normalizedCity = city.trim();
+    if (normalizedCity.isEmpty) return name;
+    if (name.toLowerCase().contains(normalizedCity.toLowerCase())) return name;
+    return '$name - $normalizedCity';
+  }
 
   /// Logotipo efectivo de la sucursal (símbolo o icono).
   /// Si `logoUrl` no está definido, realiza fallback al `imageUrl` previo.
-  String? get effectiveLogo =>
-      (logoUrl != null && logoUrl!.trim().isNotEmpty)
-          ? logoUrl
-          : ((imageUrl != null && imageUrl!.trim().isNotEmpty) ? imageUrl : null);
+  String? get effectiveLogo => (logoUrl != null && logoUrl!.trim().isNotEmpty)
+      ? logoUrl
+      : ((imageUrl != null && imageUrl!.trim().isNotEmpty) ? imageUrl : null);
 
   /// IsoLogo efectivo de la sucursal (símbolo + nombre comercial integrado).
   /// Si `isoLogoUrl` no está definido, realiza fallback a `effectiveLogo`.
   String? get effectiveIsoLogo =>
       (isoLogoUrl != null && isoLogoUrl!.trim().isNotEmpty)
-          ? isoLogoUrl
-          : effectiveLogo;
+      ? isoLogoUrl
+      : effectiveLogo;
 }
 
 class CreateBranch extends BaseBranch {
   CreateBranch({
     required super.name,
     required super.address,
+    super.city,
     required super.phone,
     super.email,
     super.facebook,
@@ -56,12 +70,14 @@ class CreateBranch extends BaseBranch {
     super.isoLogoUrl,
     super.bioanalyst,
     super.auxBio,
+    super.autoCalculateFormulas = true,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'address': address,
+      'city': city,
       'phone': phone,
       if (email != null) 'email': email,
       if (facebook != null) 'facebook': facebook,
@@ -70,6 +86,7 @@ class CreateBranch extends BaseBranch {
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
       if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
       if (auxBio != null) 'auxBio': auxBio!.map((e) => e.toJson()).toList(),
+      'autoCalculateFormulas': autoCalculateFormulas,
     };
   }
 }
@@ -77,6 +94,7 @@ class CreateBranch extends BaseBranch {
 class UpdateBranch {
   final String? name;
   final String? address;
+  final String? city;
   final String? phone;
   final String? email;
   final String? facebook;
@@ -85,10 +103,12 @@ class UpdateBranch {
   final String? isoLogoUrl;
   final BioanalystInfo? bioanalyst;
   final List<AuxBioanalyst>? auxBio;
+  final bool? autoCalculateFormulas;
 
   UpdateBranch({
     this.name,
     this.address,
+    this.city,
     this.phone,
     this.email,
     this.facebook,
@@ -97,12 +117,14 @@ class UpdateBranch {
     this.isoLogoUrl,
     this.bioanalyst,
     this.auxBio,
+    this.autoCalculateFormulas,
   });
 
   Map<String, dynamic> toJson() {
     return {
       if (name != null) 'name': name,
       if (address != null) 'address': address,
+      if (city != null) 'city': city,
       if (phone != null) 'phone': phone,
       if (email != null) 'email': email,
       if (facebook != null) 'facebook': facebook,
@@ -111,6 +133,8 @@ class UpdateBranch {
       if (isoLogoUrl != null) 'isoLogoUrl': isoLogoUrl,
       if (bioanalyst != null) 'bioanalyst': bioanalyst!.toJson(),
       if (auxBio != null) 'auxBio': auxBio!.map((e) => e.toJson()).toList(),
+      if (autoCalculateFormulas != null)
+        'autoCalculateFormulas': autoCalculateFormulas,
     };
   }
 }
@@ -125,6 +149,7 @@ class BranchInDb extends BaseBranch {
     required this.id,
     required super.name,
     required super.address,
+    super.city,
     required super.phone,
     super.email,
     super.facebook,
@@ -133,6 +158,7 @@ class BranchInDb extends BaseBranch {
     super.isoLogoUrl,
     super.bioanalyst,
     super.auxBio,
+    super.autoCalculateFormulas = true,
     required this.createdAt,
     this.updatedAt,
     this.isDeleted = false,
@@ -156,6 +182,7 @@ class BranchInDb extends BaseBranch {
       id: json['id'] as String,
       name: json['name'] as String,
       address: json['address'] as String,
+      city: json['city'] as String? ?? '',
       phone: json['phone'] as String,
       email: json['email'] as String?,
       facebook: json['facebook'] as String?,
@@ -166,6 +193,7 @@ class BranchInDb extends BaseBranch {
           ? BioanalystInfo.fromJson(rawBioanalyst)
           : null,
       auxBio: auxBioList,
+      autoCalculateFormulas: json['autoCalculateFormulas'] as bool? ?? true,
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
       isDeleted: json['isDeleted'] as bool? ?? false,

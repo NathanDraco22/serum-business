@@ -9,7 +9,9 @@ class SerumClient {
 
   static SerumClientConfig get instance {
     if (_config == null) {
-      throw StateError('SerumClient not initialized. Call SerumClient.initialize() first.');
+      throw StateError(
+        'SerumClient not initialized. Call SerumClient.initialize() first.',
+      );
     }
     return _config!;
   }

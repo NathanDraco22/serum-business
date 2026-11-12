@@ -28,9 +28,7 @@ class RolesRepository with ReactiveRepository<RoleInDb> {
     );
 
     _roles = response.data;
-    _roles.sort(
-      (a, b) => b.accessLevel.compareTo(a.accessLevel),
-    );
+    _roles.sort((a, b) => b.accessLevel.compareTo(a.accessLevel));
     return _roles;
   }
 
@@ -42,21 +40,12 @@ class RolesRepository with ReactiveRepository<RoleInDb> {
 
   Future<List<RoleInDb>> searchRoleByKeyword(String keyword) async {
     final result = await rolesDataSource.searchRoleByKeyword(keyword);
-    final response = ListResponse<RoleInDb>.fromJson(
-      result,
-      RoleInDb.fromJson,
-    );
+    final response = ListResponse<RoleInDb>.fromJson(result, RoleInDb.fromJson);
     return response.data;
   }
 
-  Future<RoleInDb?> updateRoleById(
-    String roleId,
-    UpdateRole role,
-  ) async {
-    final result = await rolesDataSource.updateRoleById(
-      roleId,
-      role.toJson(),
-    );
+  Future<RoleInDb?> updateRoleById(String roleId, UpdateRole role) async {
+    final result = await rolesDataSource.updateRoleById(roleId, role.toJson());
     if (result == null) return null;
 
     final updatedRole = RoleInDb.fromJson(result);

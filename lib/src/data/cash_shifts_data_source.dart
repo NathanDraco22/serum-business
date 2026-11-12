@@ -11,7 +11,8 @@ class CashShiftsDataSource with HttpService {
   final _endpoint = "/cash-shifts";
 
   Future<Map<String, dynamic>> openCashShift(
-      Map<String, dynamic> cashShift) async {
+    Map<String, dynamic> cashShift,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/open");
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, cashShift, headers: headers);

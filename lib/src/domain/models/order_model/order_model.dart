@@ -14,7 +14,7 @@ class PatientInfo {
   PatientInfo({
     required this.name,
     this.dateOfBirth = 0,
-    this.gender = 'M',
+    this.gender = '',
     this.phone = '',
     this.address = '',
     this.cardId,
@@ -36,15 +36,24 @@ class PatientInfo {
   }
 
   factory PatientInfo.fromJson(Map<String, dynamic> json) {
+    final dateOfBirth = (json['dateOfBirth'] as num?)?.toInt() ?? 0;
+    final rawAge = (json['age'] as num?)?.toInt();
+    // `age: 0` sin fecha de nacimiento es ambiguo: puede ser un recién nacido
+    // o un snapshot viejo que serializó "sin edad" como 0. Se trata como
+    // desconocido; la fecha de nacimiento sigue siendo la fuente principal.
+    final explicitAge = rawAge != null && (rawAge > 0 || dateOfBirth > 0)
+        ? rawAge
+        : null;
+
     return PatientInfo(
       name: json['name'] as String? ?? '',
-      dateOfBirth: (json['dateOfBirth'] as num?)?.toInt() ?? 0,
-      gender: json['gender'] as String? ?? 'M',
+      dateOfBirth: dateOfBirth,
+      gender: json['gender'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
       address: json['address'] as String? ?? '',
       cardId: json['cardId'] as String?,
       email: json['email'] as String?,
-      age: json['age'] as int?,
+      age: explicitAge,
     );
   }
 
@@ -55,9 +64,9 @@ class PatientInfo {
       'gender': gender,
       'phone': phone,
       'address': address,
-      'age': age,
       if (cardId != null) 'cardId': cardId,
       if (email != null) 'email': email,
+      if (explicitAge != null) 'age': explicitAge!,
     };
   }
 }
@@ -118,7 +127,8 @@ class OrderItem {
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     final salePrice = (json['salePriceApplied'] as num?)?.toInt() ?? 0;
     return OrderItem(
-      labTestId: json['labTestId'] as String? ?? json['examId'] as String? ?? '',
+      labTestId:
+          json['labTestId'] as String? ?? json['examId'] as String? ?? '',
       name: json['name'] as String? ?? json['examName'] as String? ?? '',
       salePriceApplied: salePrice,
       originalPrice: (json['originalPrice'] as num?)?.toInt() ?? salePrice,
@@ -144,11 +154,7 @@ class OrderService {
   final String name;
   final int price;
 
-  OrderService({
-    this.id,
-    required this.name,
-    required this.price,
-  });
+  OrderService({this.id, required this.name, required this.price});
 
   factory OrderService.fromJson(Map<String, dynamic> json) {
     return OrderService(
@@ -159,18 +165,10 @@ class OrderService {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      if (id != null) 'id': id,
-      'name': name,
-      'price': price,
-    };
+    return {if (id != null) 'id': id, 'name': name, 'price': price};
   }
 
-  OrderService copyWith({
-    String? id,
-    String? name,
-    int? price,
-  }) {
+  OrderService copyWith({String? id, String? name, int? price}) {
     return OrderService(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -272,6 +270,50 @@ class OrderApproval {
   }
 }
 
+class OrderStatusChange {
+  final String status;
+  final int changedAt;
+  final UserInfo? changedBy;
+  final String? reason;
+
+  OrderStatusChange({
+    required this.status,
+    required this.changedAt,
+    this.changedBy,
+    this.reason,
+  });
+
+  factory OrderStatusChange.fromJson(Map<String, dynamic> json) {
+    return OrderStatusChange(
+      status: json['status'] as String? ?? '',
+      changedAt: (json['changedAt'] as num?)?.toInt() ?? 0,
+      changedBy: json['changedBy'] != null
+          ? UserInfo.fromJson(json['changedBy'] as Map<String, dynamic>)
+          : null,
+      reason: json['reason'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'changedAt': changedAt,
+      if (changedBy != null) 'changedBy': changedBy!.toJson(),
+      if (reason != null) 'reason': reason,
+    };
+  }
+}
+
+class OrderReopenRequest {
+  final String reason;
+
+  OrderReopenRequest({required this.reason});
+
+  Map<String, dynamic> toJson() {
+    return {'reason': reason};
+  }
+}
+
 class BaseOrder {
   final String patientId;
   final String branchId;
@@ -293,20 +335,49 @@ class BaseOrder {
   // Backward compatibility getters
   String? get description => notes;
   String get examId => items.isNotEmpty ? items.first.labTestId : '';
-  String get examName => items.isNotEmpty ? items.map((e) => e.name).join(', ') : '';
+  String get examName =>
+      items.isNotEmpty ? items.map((e) => e.name).join(', ') : '';
   int get grossTotal {
     final itemsSum = items.fold<int>(0, (sum, i) => sum + i.salePriceApplied);
     final servicesSum = services.fold<int>(0, (sum, s) => sum + s.price);
     return itemsSum + servicesSum;
   }
+
   int get totalDiscounts {
     return discounts.fold<int>(0, (sum, d) => sum + d.appliedAmount);
   }
+
   int get salePriceApplied {
     if (totalPrice > 0) return totalPrice;
     final total = grossTotal - totalDiscounts;
     return total > 0 ? total : 0;
   }
+
+  /// Total efectivo de la orden. Es la base para decidir el estado financiero.
+  int get effectiveTotalPrice => salePriceApplied;
+
+  /// Una orden está liquidada cuando ya cubrió su total, o cuando su total es cero.
+  bool get isFullyPaid =>
+      effectiveTotalPrice <= 0 || paidAmount >= effectiveTotalPrice;
+
+  bool get isPartiallyPaid => paidAmount > 0 && !isFullyPaid;
+
+  bool get isUnpaid => paidAmount <= 0;
+
+  /// Indica si la orden está esperando la validación/finalización clínica.
+  bool get isInReview => status == 'in_review';
+
+  /// Todos los parámetros clínicos tienen un valor capturado.
+  bool get hasAllResults =>
+      results.isNotEmpty &&
+      results.every(
+        (r) => r.resultValue != null && r.resultValue!.trim().isNotEmpty,
+      );
+
+  /// Estado clínico de cierre. `in_review` nunca se considera completada,
+  /// incluso si ya está pagada y tiene todos los resultados.
+  bool get isCompleted =>
+      status == 'completed' || (!isInReview && isFullyPaid && hasAllResults);
 
   BaseOrder({
     required this.patientId,
@@ -414,6 +485,7 @@ class UpdateOrder {
   Map<String, dynamic> toJson() {
     return {
       if (patientId != null) 'patientId': patientId,
+      if (patientInfo != null) 'patientInfo': patientInfo!.toJson(),
       if (clearDoctor) ...{
         'doctorId': null,
         'doctorInfo': null,
@@ -423,13 +495,14 @@ class UpdateOrder {
       },
       if (quotationId != null) 'quotationId': quotationId,
       if (items != null) 'items': items!.map((e) => e.toJson()).toList(),
-      if (services != null) 'services': services!.map((e) => e.toJson()).toList(),
-      if (discounts != null) 'discounts': discounts!.map((e) => e.toJson()).toList(),
+      if (services != null)
+        'services': services!.map((e) => e.toJson()).toList(),
+      if (discounts != null)
+        'discounts': discounts!.map((e) => e.toJson()).toList(),
       if (totalPrice != null) 'totalPrice': totalPrice,
       if (paidAmount != null) 'paidAmount': paidAmount,
       if (status != null) 'status': status,
-      if (results != null)
-        'results': results!.map((e) => e.toJson()).toList(),
+      if (results != null) 'results': results!.map((e) => e.toJson()).toList(),
       if (branchId != null) 'branchId': branchId,
       if (isBlocked != null) 'isBlocked': isBlocked,
       if (approval != null) 'approval': approval!.toJson(),
@@ -498,6 +571,16 @@ class OrderInDb extends BaseOrder {
   final int createdAt;
   final int? updatedAt;
   final bool isDeleted;
+  final int? cancelledAt;
+  final UserInfo? cancelledBy;
+  final String? cancellationReason;
+  final List<OrderStatusChange> statusHistory;
+  final int? finalizedAt;
+  final UserInfo? finalizedBy;
+  final int? reopenedAt;
+  final UserInfo? reopenedBy;
+  final String? reopenReason;
+  final int revisionCount;
 
   OrderInDb({
     required this.id,
@@ -520,6 +603,16 @@ class OrderInDb extends BaseOrder {
     required this.createdAt,
     this.updatedAt,
     this.isDeleted = false,
+    this.cancelledAt,
+    this.cancelledBy,
+    this.cancellationReason,
+    this.statusHistory = const [],
+    this.finalizedAt,
+    this.finalizedBy,
+    this.reopenedAt,
+    this.reopenedBy,
+    this.reopenReason,
+    this.revisionCount = 0,
   });
 
   factory OrderInDb.fromJson(Map<String, dynamic> json) {
@@ -534,7 +627,7 @@ class OrderInDb extends BaseOrder {
           labTestId: json['examId'] as String,
           name: json['examName'] as String? ?? '',
           salePriceApplied: (json['salePriceApplied'] as num?)?.toInt() ?? 0,
-        )
+        ),
       ];
     }
 
@@ -552,17 +645,22 @@ class OrderInDb extends BaseOrder {
           .toList();
     }
 
-    final int calculatedFallback = parsedItems.fold<int>(0, (sum, i) => sum + i.salePriceApplied) +
+    final int calculatedFallback =
+        parsedItems.fold<int>(0, (sum, i) => sum + i.salePriceApplied) +
         parsedServices.fold<int>(0, (sum, s) => sum + s.price) -
         parsedDiscounts.fold<int>(0, (sum, d) => sum + d.appliedAmount);
 
-    final int total = (json['totalPrice'] as num?)?.toInt() ??
+    final int total =
+        (json['totalPrice'] as num?)?.toInt() ??
         (json['salePriceApplied'] as num?)?.toInt() ??
         (calculatedFallback > 0 ? calculatedFallback : 0);
 
     final patientInfoRaw = json['patientInfo'];
     final doctorInfoRaw = json['doctorInfo'];
     final approvalRaw = json['approval'];
+    final cancelledByRaw = json['cancelledBy'];
+    final finalizedByRaw = json['finalizedBy'];
+    final reopenedByRaw = json['reopenedBy'];
     final notesRaw = json['notes'] as String? ?? json['description'] as String?;
 
     return OrderInDb(
@@ -583,7 +681,8 @@ class OrderInDb extends BaseOrder {
       totalPrice: total,
       paidAmount: (json['paidAmount'] as num?)?.toInt() ?? 0,
       status: json['status'] as String? ?? "pending",
-      results: (json['results'] as List<dynamic>?)
+      results:
+          (json['results'] as List<dynamic>?)
               ?.map((e) => OrderTestResult.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -595,6 +694,28 @@ class OrderInDb extends BaseOrder {
       createdAt: json['createdAt'] as int,
       updatedAt: json['updatedAt'] as int?,
       isDeleted: json['isDeleted'] as bool? ?? false,
+      cancelledAt: (json['cancelledAt'] as num?)?.toInt(),
+      cancelledBy: cancelledByRaw != null
+          ? UserInfo.fromJson(cancelledByRaw as Map<String, dynamic>)
+          : null,
+      cancellationReason: json['cancellationReason'] as String?,
+      statusHistory:
+          (json['statusHistory'] as List<dynamic>?)
+              ?.map(
+                (e) => OrderStatusChange.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
+      finalizedAt: (json['finalizedAt'] as num?)?.toInt(),
+      finalizedBy: finalizedByRaw != null
+          ? UserInfo.fromJson(finalizedByRaw as Map<String, dynamic>)
+          : null,
+      reopenedAt: (json['reopenedAt'] as num?)?.toInt(),
+      reopenedBy: reopenedByRaw != null
+          ? UserInfo.fromJson(reopenedByRaw as Map<String, dynamic>)
+          : null,
+      reopenReason: json['reopenReason'] as String?,
+      revisionCount: (json['revisionCount'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -620,6 +741,16 @@ class OrderInDb extends BaseOrder {
       'createdAt': createdAt,
       if (updatedAt != null) 'updatedAt': updatedAt,
       'isDeleted': isDeleted,
+      if (cancelledAt != null) 'cancelledAt': cancelledAt,
+      if (cancelledBy != null) 'cancelledBy': cancelledBy!.toJson(),
+      if (cancellationReason != null) 'cancellationReason': cancellationReason,
+      'statusHistory': statusHistory.map((e) => e.toJson()).toList(),
+      if (finalizedAt != null) 'finalizedAt': finalizedAt,
+      if (finalizedBy != null) 'finalizedBy': finalizedBy!.toJson(),
+      if (reopenedAt != null) 'reopenedAt': reopenedAt,
+      if (reopenedBy != null) 'reopenedBy': reopenedBy!.toJson(),
+      if (reopenReason != null) 'reopenReason': reopenReason,
+      'revisionCount': revisionCount,
     };
   }
 }

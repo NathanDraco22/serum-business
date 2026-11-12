@@ -11,8 +11,12 @@ class CashRegistersRepository with ReactiveRepository<CashRegisterInDb> {
 
   List<CashRegisterInDb> _cashRegisters = [];
 
-  Future<CashRegisterInDb> createCashRegister(CreateCashRegister createCashRegister) async {
-    final result = await cashRegistersDataSource.createCashRegister(createCashRegister.toJson());
+  Future<CashRegisterInDb> createCashRegister(
+    CreateCashRegister createCashRegister,
+  ) async {
+    final result = await cashRegistersDataSource.createCashRegister(
+      createCashRegister.toJson(),
+    );
     final newCashRegister = CashRegisterInDb.fromJson(result);
     _cashRegisters = [newCashRegister, ..._cashRegisters];
     notifyItemCreated(newCashRegister);
@@ -34,7 +38,9 @@ class CashRegistersRepository with ReactiveRepository<CashRegisterInDb> {
   }
 
   Future<CashRegisterInDb?> getCashRegisterById(String cashRegisterId) async {
-    final result = await cashRegistersDataSource.getCashRegisterById(cashRegisterId);
+    final result = await cashRegistersDataSource.getCashRegisterById(
+      cashRegisterId,
+    );
     if (result == null) return null;
     return CashRegisterInDb.fromJson(result);
   }
@@ -58,8 +64,12 @@ class CashRegistersRepository with ReactiveRepository<CashRegisterInDb> {
     return updatedCashRegister;
   }
 
-  Future<CashRegisterInDb?> deleteCashRegisterById(String cashRegisterId) async {
-    final result = await cashRegistersDataSource.deleteCashRegisterById(cashRegisterId);
+  Future<CashRegisterInDb?> deleteCashRegisterById(
+    String cashRegisterId,
+  ) async {
+    final result = await cashRegistersDataSource.deleteCashRegisterById(
+      cashRegisterId,
+    );
     if (result == null) return null;
 
     final deletedCashRegister = CashRegisterInDb.fromJson(result);

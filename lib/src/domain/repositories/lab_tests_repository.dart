@@ -11,7 +11,9 @@ class LabTestsRepository with ReactiveRepository<LabTestInDb> {
   List<LabTestInDb> _labTests = [];
 
   Future<LabTestInDb> createLabTest(CreateLabTest createLabTest) async {
-    final result = await labTestsDataSource.createLabTest(createLabTest.toJson());
+    final result = await labTestsDataSource.createLabTest(
+      createLabTest.toJson(),
+    );
     final newLabTest = LabTestInDb.fromJson(result);
     _labTests = [newLabTest, ..._labTests];
     notifyItemCreated(newLabTest);

@@ -13,7 +13,9 @@ class ApiKeysRepository with ReactiveRepository<ApiKeyModel> {
 
   Future<List<ApiKeyModel>> getAllApiKeys() async {
     final results = await apiKeysDataSource.getAllApiKeys();
-    _apiKeys = results.map((e) => ApiKeyModel.fromJson(e as Map<String, dynamic>)).toList();
+    _apiKeys = results
+        .map((e) => ApiKeyModel.fromJson(e as Map<String, dynamic>))
+        .toList();
     return _apiKeys;
   }
 
@@ -37,10 +39,7 @@ class ApiKeysRepository with ReactiveRepository<ApiKeyModel> {
     return created;
   }
 
-  Future<ApiKeyModel?> toggleApiKeyStatus(
-    String keyId,
-    bool isActive,
-  ) async {
+  Future<ApiKeyModel?> toggleApiKeyStatus(String keyId, bool isActive) async {
     final result = await apiKeysDataSource.toggleApiKeyStatus(keyId, isActive);
     final updated = ApiKeyModel.fromJson(result);
     final index = _apiKeys.indexWhere((k) => k.id == keyId);

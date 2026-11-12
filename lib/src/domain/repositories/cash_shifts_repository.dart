@@ -11,8 +11,9 @@ class CashShiftsRepository with ReactiveRepository<CashShiftInDb> {
   List<CashShiftInDb> _cashShifts = [];
 
   Future<CashShiftInDb> openShift(CreateCashShift createCashShift) async {
-    final result =
-        await cashShiftsDataSource.openCashShift(createCashShift.toJson());
+    final result = await cashShiftsDataSource.openCashShift(
+      createCashShift.toJson(),
+    );
     final newCashShift = CashShiftInDb.fromJson(result);
     _cashShifts = [newCashShift, ..._cashShifts];
     notifyItemCreated(newCashShift);
@@ -44,7 +45,9 @@ class CashShiftsRepository with ReactiveRepository<CashShiftInDb> {
       userId: userId,
     );
     final closedShift = CashShiftInDb.fromJson(result);
-    _cashShifts = _cashShifts.map((s) => s.id == shiftId ? closedShift : s).toList();
+    _cashShifts = _cashShifts
+        .map((s) => s.id == shiftId ? closedShift : s)
+        .toList();
     notifyItemUpdated(closedShift);
     return closedShift;
   }

@@ -10,6 +10,11 @@ class AppSettingsRepository {
 
   AppSettingModel? get currentAppSettings => _currentAppSettings;
 
+  /// Limpia la configuración cacheada al cerrar sesión o cambiar de tenant.
+  void clearCache() {
+    _currentAppSettings = null;
+  }
+
   Future<AppSettingModel> getCurrentAppSettings() async {
     final result = await appSettingsDataSource.getCurrentAppSettings();
     if (result == null) {

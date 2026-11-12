@@ -31,7 +31,10 @@ class UsersDataSource with HttpService {
     return res;
   }
 
-  Future<Map<String, dynamic>?> updateUserById(String userId, Map<String, dynamic> user) async {
+  Future<Map<String, dynamic>?> updateUserById(
+    String userId,
+    Map<String, dynamic> user,
+  ) async {
     final uri = HttpTools.generateUri("$_endpoint/$userId");
     final headers = HttpTools.generateAuthHeaders();
     final res = await patchQuery(uri, body: user, headers: headers);

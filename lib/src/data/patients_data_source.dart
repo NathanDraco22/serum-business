@@ -10,7 +10,9 @@ class PatientsDataSource with HttpService {
 
   final _endpoint = "/patients";
 
-  Future<Map<String, dynamic>> createPatient(Map<String, dynamic> patient) async {
+  Future<Map<String, dynamic>> createPatient(
+    Map<String, dynamic> patient,
+  ) async {
     final uri = HttpTools.generateUri(_endpoint);
     final headers = HttpTools.generateAuthHeaders();
     final res = await postQuery(uri, patient, headers: headers);
@@ -18,7 +20,9 @@ class PatientsDataSource with HttpService {
   }
 
   Future<Map<String, dynamic>> getAllPatients({String? originBranch}) async {
-    final queryParams = originBranch != null ? {'origin_branch': originBranch} : null;
+    final queryParams = originBranch != null
+        ? {'origin_branch': originBranch}
+        : null;
     final uri = HttpTools.generateUri(_endpoint, queryParameters: queryParams);
     final headers = HttpTools.generateAuthHeaders();
     final res = await getQuery(uri, headers: headers);
@@ -53,7 +57,9 @@ class PatientsDataSource with HttpService {
     String textQuery, {
     String? originBranch,
   }) async {
-    final queryParams = originBranch != null ? {'origin_branch': originBranch} : null;
+    final queryParams = originBranch != null
+        ? {'origin_branch': originBranch}
+        : null;
     final uri = HttpTools.generateUri(
       "$_endpoint/search/$textQuery",
       queryParameters: queryParams,

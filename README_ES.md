@@ -76,7 +76,7 @@ lib/
 
 | Modelo | Campos | Usado por |
 |---|---|---|
-| `ReferenceValue` | patientType, gender, minAgeDays, maxAgeDays, minValue, maxValue | LabTest, IncludedTest |
+| `ReferenceValue` | patientType, gender, minAgeDays, maxAgeDays, minValue, maxValue, useAge, useGender | LabTest, IncludedTest |
 | `IncludedTest` | labTestId, parameterName, medicalClassification, dataType, unitOfMeasure, referenceValues | Exam |
 | `QuotedExam` | examId, examName, quotedPrice | Quotation |
 | `OrderTestResult` | extiende IncludedTest + resultValue, alertFlag | Order |

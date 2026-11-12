@@ -24,13 +24,15 @@ class ServerException extends HttpServiceException {
 }
 
 class BadRequestException extends HttpServiceException {
-  BadRequestException(Map<String, dynamic> body, this.statusCode) : super("CLIENT_ERROR", body);
+  BadRequestException(Map<String, dynamic> body, this.statusCode)
+    : super("CLIENT_ERROR", body);
 
   final int statusCode;
 }
 
 class UnauthorizedException extends HttpServiceException {
-  UnauthorizedException(Map<String, dynamic> body) : super("UNAUTHORIZED", body);
+  UnauthorizedException(Map<String, dynamic> body)
+    : super("UNAUTHORIZED", body);
 }
 
 class ForbiddenException extends HttpServiceException {
@@ -38,5 +40,6 @@ class ForbiddenException extends HttpServiceException {
 }
 
 class InternalRequestException extends HttpServiceException {
-  InternalRequestException(Map<String, dynamic> body) : super("INTERNAL_ERROR", body);
+  InternalRequestException(Map<String, dynamic> body)
+    : super("INTERNAL_ERROR", body);
 }

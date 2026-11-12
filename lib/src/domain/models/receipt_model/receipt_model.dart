@@ -87,10 +87,7 @@ class UpdateReceipt {
   final String? concept;
   final String? patientName;
 
-  UpdateReceipt({
-    this.concept,
-    this.patientName,
-  });
+  UpdateReceipt({this.concept, this.patientName});
 
   Map<String, dynamic> toJson() {
     return {

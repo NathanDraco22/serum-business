@@ -1,8 +1,11 @@
+import 'app_currency.dart';
+
 class AppSettingModel {
   final String id;
   final bool useCost;
   final bool usePrice2;
   final bool allowEditPrice;
+  final AppCurrency currency;
   final int createdAt;
   final int? updatedAt;
 
@@ -11,6 +14,7 @@ class AppSettingModel {
     this.useCost = false,
     this.usePrice2 = false,
     this.allowEditPrice = false,
+    this.currency = AppCurrency.nio,
     required this.createdAt,
     this.updatedAt,
   });
@@ -21,6 +25,7 @@ class AppSettingModel {
       useCost: json['useCost'] as bool? ?? false,
       usePrice2: json['usePrice2'] as bool? ?? false,
       allowEditPrice: json['allowEditPrice'] as bool? ?? false,
+      currency: AppCurrency.fromCode(json['currency'] as String?),
       createdAt: json['createdAt'] as int? ?? 0,
       updatedAt: json['updatedAt'] as int?,
     );
@@ -32,6 +37,7 @@ class AppSettingModel {
       'useCost': useCost,
       'usePrice2': usePrice2,
       'allowEditPrice': allowEditPrice,
+      'currency': currency.code,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -42,6 +48,7 @@ class AppSettingModel {
     bool? useCost,
     bool? usePrice2,
     bool? allowEditPrice,
+    AppCurrency? currency,
     int? createdAt,
     int? updatedAt,
   }) {
@@ -50,6 +57,7 @@ class AppSettingModel {
       useCost: useCost ?? this.useCost,
       usePrice2: usePrice2 ?? this.usePrice2,
       allowEditPrice: allowEditPrice ?? this.allowEditPrice,
+      currency: currency ?? this.currency,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -60,11 +68,13 @@ class UpdateAppSetting {
   final bool? useCost;
   final bool? usePrice2;
   final bool? allowEditPrice;
+  final AppCurrency? currency;
 
   const UpdateAppSetting({
     this.useCost,
     this.usePrice2,
     this.allowEditPrice,
+    this.currency,
   });
 
   Map<String, dynamic> toJson() {
@@ -77,6 +87,9 @@ class UpdateAppSetting {
     }
     if (allowEditPrice != null) {
       data['allowEditPrice'] = allowEditPrice;
+    }
+    if (currency != null) {
+      data['currency'] = currency!.code;
     }
     return data;
   }

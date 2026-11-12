@@ -6,7 +6,7 @@ class LabTestAccountsRepository {
   final LabTestAccountsDataSource dataSource;
 
   LabTestAccountsRepository({LabTestAccountsDataSource? dataSource})
-      : dataSource = dataSource ?? LabTestAccountsDataSource();
+    : dataSource = dataSource ?? LabTestAccountsDataSource();
 
   Future<List<LabTestAccountInDb>> getAccountsByBranch(String branchId) async {
     final res = await dataSource.getAccountsByBranch(branchId);
@@ -39,8 +39,10 @@ class LabTestAccountsRepository {
     String accountId,
     UpdateLabTestCommercial commercial,
   ) async {
-    final res =
-        await dataSource.updateCommercial(accountId, commercial.toJson());
+    final res = await dataSource.updateCommercial(
+      accountId,
+      commercial.toJson(),
+    );
     if (res == null) return null;
     return LabTestAccountInDb.fromJson(res);
   }

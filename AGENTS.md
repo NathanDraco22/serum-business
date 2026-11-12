@@ -25,6 +25,7 @@ Este proyecto es el paquete central de lógica de negocio y repositorios del sis
 
 ### 3. Manejo de Montos y Fechas
 - **Dinero:** Siempre en enteros (`int`) representando **centavos**.
+- **Formato monetario:** Usar `NumberFormatter`; la moneda global se registra con `configureCurrencyResolver` desde la app. Nunca concatenar símbolos ni duplicar setters de moneda.
 - **Fechas de Base de Datos:** Milisegundos Unix (`int`).
 - **Nombres de Campos:** `camelCase` estricto en JSON para empatar con los esquemas del backend FastAPI.
 

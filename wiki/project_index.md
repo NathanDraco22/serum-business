@@ -3,7 +3,7 @@ type: index
 title: Serum Business — Mapa del Proyecto (Project Index)
 description: Mapa maestro y exhaustivo de la arquitectura, repositorios de negocio, data sources, modelos y servicios del paquete Dart puro serum_business.
 tags: [dart, business-logic, lis, index, map, repositories, client]
-timestamp: 2026-10-21T15:45:00Z
+timestamp: 2026-11-12T12:00:00Z
 ---
 
 # 🗺️ Project Index — Serum Business (`serum_business`)
@@ -44,6 +44,10 @@ Este documento es el **mapa central y rector** del paquete Dart puro `serum_busi
         ↓
 [ Backend FastAPI / Red ]
 ```
+
+### Modelos Clínicos Compartidos:
+- `ReferenceValueResolver` resuelve el rango de referencia demográfico (edad exacta en días y género normalizado). La edad requiere `referenceDateMs` explícito (normalmente `order.createdAt`) y no depende de `DateTime.now()`.
+- `ClinicalAlertEvaluator` recalcula los flags clínicos (`H`, `L`, `ABNORMAL`) desde el valor capturado y el rango resuelto; `NORMAL` equivale a ausencia de alerta y nunca se prioriza un `alertFlag` persistido sobre el rango actual.
 
 ### Convenciones Críticas de Datos:
 - **Montos Monetarios:** Siempre enteros (`int`) en **centavos**. $100.00 MXN se representa como `10000`. Nunca números de punto flotante (`double`) en cálculos contables.
@@ -110,7 +114,7 @@ El paquete organiza la lógica de interacción en **20 repositorios especializad
 | # | Repositorio | Archivo | Responsabilidad Principal |
 |---|---|---|---|
 | 1 | **`AuthRepository`** | `auth_repository.dart` | Autenticación, login con email/password, refresh automático de JWT y verificación `/check-user`. |
-| 2 | **`OrdersRepository`** | `orders_repository.dart` | Gestión de órdenes de laboratorio, snapshots inmutables de pruebas, registro de resultados médicos y aprobación facultativa. |
+| 2 | **`OrdersRepository`** | `orders_repository.dart` | Gestión de órdenes de laboratorio, snapshots inmutables de pruebas, registro de resultados médicos, cierre clínico explícito (`in_review` → `completed`), reapertura auditada y aprobación facultativa. |
 | 3 | **`LabTestsRepository`** | `lab_tests_repository.dart` | Catálogo de análisis individuales y paquetes (Packs) comerciales, parámetros clínicos y valores de referencia. |
 | 4 | **`PatientsRepository`** | `patients_repository.dart` | Catálogo de pacientes, datos biológicos (edad, género), historial y búsqueda de texto optimizada. |
 | 5 | **`DoctorsRepository`** | `doctors_repository.dart` | Directorio de médicos remitentes y cálculo de comisiones. |
@@ -124,7 +128,7 @@ El paquete organiza la lógica de interacción en **20 repositorios especializad
 | 13 | **`UsersRepository`** | `users_repository.dart` | Gestión de usuarios, asignación de sucursales permitidas y desactivación. |
 | 14 | **`RolesRepository`** | `roles_repository.dart` | Definición de roles de seguridad y matriz de permisos por módulo. |
 | 15 | **`LabTestAccountsRepository`**| `lab_test_accounts_repository.dart`| Listas de precios corporativas, convenios empresariales y tarifas preferenciales. |
-| 16 | **`AppSettingsRepository`** | `app_settings_repository.dart` | Parámetros globales de configuración del laboratorio y personalización. |
+| 16 | **`AppSettingsRepository`** | `app_settings_repository.dart` | Parámetros globales de configuración del laboratorio (costos, precios y moneda global). La moneda se resuelve con `AppCurrency` + `NumberFormatter.configureCurrencyResolver`. |
 | 17 | **`ApiKeysRepository`** | `api_keys_repository.dart` | Generación y revocación de API keys para integración con sistemas externos (analizadores, HL7/REST). |
 | 18 | **`ImportsRepository`** | `imports_repository.dart` | Procesamiento e importación masiva de catálogos clínicos vía archivos JSON o CSV. |
 | 19 | **`ReportsRepository`** | `reports_repository.dart` | Extracción de reportes de rentabilidad, volumen de órdenes y desempeño médico. |

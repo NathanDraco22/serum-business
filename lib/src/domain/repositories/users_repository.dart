@@ -26,9 +26,7 @@ class UsersRepository with ReactiveRepository<UserInDb> {
     );
 
     _users = response.data;
-    _users.sort(
-      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-    );
+    _users.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return _users;
   }
 
@@ -38,14 +36,8 @@ class UsersRepository with ReactiveRepository<UserInDb> {
     return UserInDb.fromJson(result);
   }
 
-  Future<UserInDb?> updateUserById(
-    String userId,
-    UpdateUser user,
-  ) async {
-    final result = await usersDataSource.updateUserById(
-      userId,
-      user.toJson(),
-    );
+  Future<UserInDb?> updateUserById(String userId, UpdateUser user) async {
+    final result = await usersDataSource.updateUserById(userId, user.toJson());
     if (result == null) return null;
 
     final updatedUser = UserInDb.fromJson(result);

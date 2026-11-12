@@ -19,7 +19,9 @@ class DoctorsRepository with ReactiveRepository<DoctorInDb> {
   }
 
   Future<List<DoctorInDb>> getAllDoctors({String? originBranch}) async {
-    final results = await doctorsDataSource.getAllDoctors(originBranch: originBranch);
+    final results = await doctorsDataSource.getAllDoctors(
+      originBranch: originBranch,
+    );
     final response = ListResponse<DoctorInDb>.fromJson(
       results,
       DoctorInDb.fromJson,

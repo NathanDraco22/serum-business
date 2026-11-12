@@ -43,12 +43,14 @@ class ImportsDataSource with HttpService {
   Future<Map<String, dynamic>> updateCatalog({
     bool overridePrice = false,
     bool updateLabTest = true,
+    bool preserveReferenceValues = true,
   }) async {
     final headers = HttpTools.generateAuthHeaders();
     final uri = HttpTools.generateUri("$_endpoint/update-catalog");
     final body = {
       'overridePrice': overridePrice,
       'updateLabTest': updateLabTest,
+      'preserveReferenceValues': preserveReferenceValues,
     };
     final res = await postQuery(uri, body, headers: headers);
     return res;
